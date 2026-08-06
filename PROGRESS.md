@@ -94,3 +94,54 @@ observed.
 
 **Delegated to agy:** None this session — venv setup and running an
 existing test script are direct execution, not content/code generation.
+
+## 2026-08-07 — session 3
+
+**Did:** Re-verified state fresh again (git log, git status, system
+resources — all stable: 7.3GB available RAM, 326GB free disk, load ~1.0 on
+22 cores, no active swap churn). Ran Go/No-Go Test 7 (fresh literature scoop
+check) for the first time, per its checklist
+(`experiments/go_no_go/test7_literature_scoop_checklist.md`): all 6 required
+search queries via WebSearch. This is pure research/content work — no model
+load, no compile, no heavy compute — so no agy delegation was needed or
+used; did the search and synthesis directly.
+
+**Found:** No exact fusion of "conversational pause as trigger" +
+"single-model self-speculative depth extension" turned up on any of the 6
+queries — Test 7 = **PASSED (as of 2026-08-07)**. The two previously-known
+closest systems (`docs/06_Literature_Survey.md` §H.3: Venkatesha et al.
+edge-cloud speculative decoding, and Ok et al.'s Speculative End-Turn
+Detector) resurfaced, confirming they're still the nearest prior work and
+nothing closer has appeared since the last pass. One **new** partial-overlap
+paper turned up: "Thinking While Speaking" (arXiv:2511.07397) — a two-model
+talker/reasoner architecture for hiding a voice agent's own reasoning
+latency. Verified its actual claim by fetching the abstract directly (didn't
+trust the search snippet alone, since the title alone sounded closer to
+PADS than the mechanism turned out to be) — confirmed it's a two-model
+system, i.e. architecturally the opposite of PADS's single-model approach,
+and explicitly the pattern `docs/03_SKILL.md` rules out. Added it to the
+literature survey as new §H.4 with an explicit differentiation, per Test 7's
+"partial overlap → cite and continue" protocol.
+
+**Passed/failed:** Test 7 = PASSED (no reposition needed). Logged both the
+summary table row and a full per-instance entry in
+`experiments/go_no_go_results.md`, as its checklist requires (biweekly
+cadence, not one-and-done — next due ~2026-08-21).
+
+**Next:** Six Go/No-Go tests now have a logged result (5 PARTIAL, 7 PASSED);
+five remain fully unstarted (1, 2, 3, 4, 6). All five need either real model
+weights (1, 3, 4, 6 — bandwidth/acceptance-rate/thermal/energy all require
+an actual GGUF running) or a speech corpus (2 — Switchboard/CallHome pause
+statistics). Acquiring model weights is a bigger, network-dependent unit of
+work than anything done so far and should get its own careful pass (check
+disk/RAM budget before any download, verify checksum, respect the "start
+from released LayerSkip checkpoints, don't train from scratch" rule in
+`docs/03_SKILL.md`). That's the natural next session's unit of work.
+
+**Safety events:** None. No heavy process run this session (WebSearch/
+WebFetch are network I/O, not local compute/memory load). RAM/disk/load
+unchanged from session start throughout.
+
+**Delegated to agy:** None. Literature search and synthesis were done
+directly since they don't require agy's content-generation role — the task
+was verifying real search results, not generating draft content.
