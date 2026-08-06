@@ -19,7 +19,12 @@ cd llama.cpp
 # build) -- verified via an actual build attempt, see
 # experiments/results/llamacpp_build_verification_log.md
 cmake -B build -DGGML_NATIVE=ON -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_UI=OFF
-cmake --build build --config Release -j "$(nproc)"
+
+# Conservative thread count per CLAUDE.md's safety rule: nproc-1, not nproc,
+# to leave headroom for the OS and any other foreground process.
+NPROC="$(nproc)"
+BUILD_JOBS=$(( NPROC > 1 ? NPROC - 1 : 1 ))
+cmake --build build --config Release -j "$BUILD_JOBS"
 
 echo "Build complete. Binaries in llama.cpp/build/bin/"
 echo ""

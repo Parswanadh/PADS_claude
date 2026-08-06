@@ -145,3 +145,50 @@ unchanged from session start throughout.
 **Delegated to agy:** None. Literature search and synthesis were done
 directly since they don't require agy's content-generation role — the task
 was verifying real search results, not generating draft content.
+
+## 2026-08-07 — session 4
+
+**Did:** Re-verified state fresh (git log/status, system resources — RAM
+available had drifted down to 6.7GB and load average up to 3.22 since last
+session, still above the 3GB threshold but a trend worth noting). Per the
+build order, the remaining environment-setup prerequisite for Go/No-Go
+tests 1/3/4/6 is llama.cpp. Rather than running the full
+`setup/setup_llama_cpp.sh` (clone + configure + heavy multi-core compile)
+in one shot, split it: this session did the clone and `cmake` configure
+only (fast, low-resource, network + metadata, not CPU-heavy), and
+deliberately deferred the actual `cmake --build` compile — the genuinely
+heavy step — to a dedicated future session, given the RAM/load trend and
+this being a shared, actively-used workstation. Also fixed a real safety
+gap found along the way: `setup_llama_cpp.sh` hardcoded `-j "$(nproc)"`
+(22 threads) for the compile, conflicting with CLAUDE.md's nproc-1 rule;
+changed it to compute `nproc - 1`. Added `llama.cpp/` and `.venv/` to
+`.gitignore` (external build dependency, not project source).
+
+**Found:** Clone and `cmake` configure both passed cleanly on this real
+22-thread machine — native CPU detection (`-march=native`, x86 backend,
+OpenMP 4.5, GNU 13.3.0), a meaningfully different verification than the
+existing `llamacpp_build_verification_log.md`, which only ran configure in
+a 1-core sandbox. Logged as a new file,
+`experiments/results/llamacpp_build_verification_realhw_log.md`, rather
+than overwriting the sandbox log, since both are legitimate distinct data
+points (sandbox vs. real hardware, pre- vs. post- thread-count fix).
+
+**Passed/failed:** Not a Go/No-Go test row — this is SKILL.md build-order
+§1 (environment setup), a precondition for tests 1/3/4/6, not a test
+itself. Clone + configure: PASSED. Compile: not yet attempted (by design).
+
+**Next:** Run `cmake --build build -j <nproc-1>` (now the script's default)
+in a dedicated session, starting with a fresh resource check, watching RAM
+throughout, and logging real build time/success on this hardware. After
+that: acquire a GGUF model (or an HF LayerSkip checkpoint to convert) per
+`docs/03_SKILL.md`'s "start from released checkpoints, quantize last" rule
+— check disk budget before any multi-GB download.
+
+**Safety events:** None triggering a stop. Noted a RAM/load trend
+(available RAM 7.5→6.7GB, load avg 1→3.22 over the session) that motivated
+splitting this unit of work smaller than originally planned, rather than
+running the full setup script (including its heavy compile) in one pass.
+This is exactly the kind of caution CLAUDE.md asks for, not an incident.
+
+**Delegated to agy:** None. Clone/configure/script-fix are direct execution
+and a small, safety-critical config change — not content generation.
