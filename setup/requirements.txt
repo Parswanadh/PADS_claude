@@ -1,0 +1,11 @@
+# Hardware-agnostic pieces (verified in sandbox)
+numpy
+scikit-learn
+psutil
+pytest
+
+# Target-hardware pieces (install on the Latitude 5490)
+# llama-cpp-python        # optional Python bindings, alternative to raw llama.cpp CLI
+# huggingface_hub
+# soundfile                # for turn-taking predictor audio I/O
+# torch                    # for LayerSkip fine-tuning / dialogue-act classifier if moving beyond sklearn

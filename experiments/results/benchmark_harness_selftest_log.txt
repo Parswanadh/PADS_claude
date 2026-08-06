@@ -1,0 +1,20 @@
+== Benchmark harness self-test (MOCK mode, synthetic numbers) ==
+
+[plain_decoding]
+  n_runs=8  TTFT=451.1±12.6 ms  tok/s=12.0±0.3  peak_RAM=7.89 GB  acceptance=None
+
+[standard_speculative_decoding]
+  n_runs=8  TTFT=301.5±8.2 ms  tok/s=21.9±0.6  peak_RAM=7.21 GB  acceptance=0.7383777837104398
+
+[plain_cascading]
+  n_runs=8  TTFT=590.4±5.8 ms  tok/s=10.2±0.1  peak_RAM=7.76 GB  acceptance=None
+
+[safe_core_dialogue_act_exit]
+  n_runs=8  TTFT=275.1±5.9 ms  tok/s=24.4±0.5  peak_RAM=7.81 GB  acceptance=None
+
+[pads_pause_time_trigger]
+  n_runs=8  TTFT=214.3±5.2 ms  tok/s=25.5±0.6  peak_RAM=7.06 GB  acceptance=None
+
+Self-test complete. Aggregation/logging logic verified.
+NONE of the numbers above are real -- rerun with --real on the
+Latitude 5490 once run_once_REAL() is wired to the actual pipeline.

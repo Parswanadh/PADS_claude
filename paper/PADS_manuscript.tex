@@ -1,0 +1,207 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{url}
+\usepackage{xcolor}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TBD: #1]}}
+
+\begin{document}
+
+\title{Pause-Aware Depth Scheduling: Hiding Reasoning Latency Inside \\ Conversational Silence for CPU-Only Edge Inference}
+
+\author{%
+    \IEEEauthorblockN{B. Parswanadh\IEEEauthorrefmark{1}, Aryanandha V\IEEEauthorrefmark{1}}
+    \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Electronics and Computer Engineering, Amrita Vishwa Vidyapeetham, Bengaluru, India}
+    \thanks{Manuscript prepared as a working draft. Corresponding author: B. Parswanadh (venkataparswanadh@gmail.com).}
+}
+
+\markboth{Draft Manuscript --- Prepared for Submission}{}
+
+\maketitle
+
+\begin{abstract}
+Self-speculative early-exit decoding allows a single large language model to draft tokens from its shallow layers and verify them with its deeper layers, avoiding the auxiliary-model and key-value (KV) cache incompatibility problems that afflict conventional two-model speculative decoding. Existing evaluations of this mechanism, however, are conducted almost exclusively on GPU-class, memory-compute-balanced hardware, and almost exclusively trigger deeper computation from token-level confidence \emph{after} a prompt is complete. We identify two open, checkable questions this leaves unanswered: (i) whether self-speculative early exit retains its benefit on CPU-only, memory-bandwidth-bound consumer hardware with no discrete GPU, and (ii) whether the natural silence preceding the end of a human conversational turn ($\sim$200--500\,ms) can be exploited to begin deep-layer computation \emph{before} the turn actually ends, hiding reasoning latency inside a resource -- human pause time -- that is otherwise unused. We term this combination Pause-Aware Depth Scheduling (PADS). We present the mechanism, a precise positioning against the closest prior systems -- a two-model edge-cloud preemptive-drafting framework and a turn-detection cascade both also named after speculative decoding -- and a pre-registered, falsifiable evaluation plan comprising seven feasibility (``Go/No-Go'') experiments intended to be run before, not after, the full system is built. We report the outcome of the subset of these experiments and environment-verification steps completed to date, and describe the remaining evaluation protocol, hardware configuration, and threats to validity for the full study.
+\end{abstract}
+
+\begin{IEEEkeywords}
+edge inference, speculative decoding, early exit, on-device large language models, conversational AI, turn-taking prediction, CPU inference, low-power computing.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+
+Conversational systems deployed on hardware with no discrete GPU -- laptops, single-board computers, embedded assistants -- face a structural trade-off: responses drawn only from shallow computation are fast but limited in reasoning depth, while responses that engage a model's full depth are capable but pay the full serial cost of every additional transformer layer. Self-speculative early-exit decoding, exemplified by LayerSkip~\cite{elhoushi2024layerskip}, narrows this trade-off within a single model: early layers produce a draft token, and if verification against the full-depth output disagrees, the deeper layers are computed and the KV cache already built by the shallow pass is reused rather than discarded. Because both the shallow and deep passes belong to the same network, this approach sidesteps a problem that would otherwise be fatal to any design assuming two independently-sized models can exchange cached state: KV caches are tied to a model's own hidden dimension and layer count and are not interchangeable across differently-sized models.
+
+Two properties of the existing early-exit literature motivate this work. First, essentially all reported speedups are measured on GPU-class accelerators, where inference is typically compute-bound; whether the same layer-skipping benefit survives on CPU-only, memory-bandwidth-bound hardware -- the actual deployment target for most consumer edge devices -- has, to our knowledge, not been systematically characterized. Second, the trigger for exiting early or continuing deeper is almost universally a per-token confidence signal evaluated \emph{after} the model has already begun generating a response to a completed prompt. In a spoken or streaming-text conversational setting, however, a substantial and predictable interval -- the pause before a human speaker finishes a turn, typically 200--500\,ms~\cite{stivers2009universals,heldner2010pauses} -- exists \emph{before} generation would normally begin at all, and is presently left computationally idle by every system we are aware of.
+
+This paper studies whether that interval can be used productively. We propose \textbf{Pause-Aware Depth Scheduling (PADS)}: a turn-taking predictor and a lightweight dialogue-act classifier jointly and conservatively decide, from a partial (in-progress) utterance, whether to begin extending computation to full model depth \emph{during} the pause rather than only after the turn is confirmed complete. If the prediction is later confirmed, some or all of the expensive computation is already finished; if not, the speculative branch is discarded under the same correctness guarantee that standard speculative decoding already provides~\cite{leviathan2023fast} -- the final output distribution is unaffected regardless of whether the shallow or deep path is ultimately used.
+
+\subsection{Contributions and Scope}
+This paper makes the following contributions:
+\begin{enumerate}
+    \item We identify and precisely bound a compound research gap at the intersection of self-speculative early exit and predictive conversational timing (Section~\ref{sec:related}), including a direct differentiation against the two closest prior systems we located, both of which independently adopted ``speculative'' naming for structurally different mechanisms.
+    \item We formalize a conservative, asymmetric trigger policy (Section~\ref{sec:design}) under which false triggers are cheap by construction, and describe the two-tier scoping of the contribution -- a safe, independently defensible characterization result, and an additive stretch mechanism -- so that a negative result on the harder half of the claim remains a complete, reportable contribution rather than a failed project.
+    \item We specify a pre-registered, falsifiable evaluation protocol (Section~\ref{sec:evaluation}) of seven feasibility experiments, each with an explicit kill condition, designed to invalidate the premise cheaply before implementation effort is committed to it.
+    \item We report verified environment and tooling results completed to date (Section~\ref{sec:status}) and the outstanding evaluation plan.
+\end{enumerate}
+
+We explicitly do not claim a working end-to-end system, final benchmark numbers, or a completed comparison against baselines at the time of this draft; Section~\ref{sec:status} states precisely what has and has not been executed, consistent with the pre-registered evaluation design.
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Self-speculative and early-exit decoding}
+LayerSkip~\cite{elhoushi2024layerskip} trains a single model with layer dropout and a shared early-exit loss so that any layer can produce a usable output, then performs self-speculative decoding by drafting from a shallow exit and verifying against full depth with the same KV cache. Follow-on work refines \emph{which} layers to skip and how the exit decision is made, including training-free dynamic-programming layer selection~\cite{chen2025clasp}, input-adaptive layer sparsity~\cite{xu2025specee}, and quantized-KV-cache self-speculation~\cite{quantspec2025}. Critically, a 2026 systematic study~\cite{wei2026diminishing} re-examines these assumptions on modern (post-2023) model families and reports that early-exit adaptability \emph{decreases} across model generations as pretraining and alignment concentrate decision-relevant computation in later layers, and that dense transformers larger than approximately 20B parameters, together with models explicitly fine-tuned for early exit (as opposed to used off-the-shelf), retain the most exploitable redundancy. This finding directly informs our model-selection and Go/No-Go design (Section~\ref{sec:evaluation}): it argues against assuming an arbitrary small instruction-tuned checkpoint will exhibit LayerSkip-like behavior without dedicated fine-tuning, and motivates measuring early-exit adaptability empirically before committing to a base model.
+
+\subsection{Routing and cascading between models}
+A separate, heavily populated line of work routes or cascades between an entire small model and an entire large model based on predicted query difficulty~\cite{ong2024routellm,mixllm2025,lookahead2025}, a pattern our early framing of this project (as HNIA, prior to the present formulation) initially and mistakenly adopted. We do not build a router: PADS never selects between models, only between depths within one model, which avoids the KV-cache incompatibility that model-selection approaches do not need to solve and self-speculative approaches solve by construction.
+
+\subsection{The two closest prior systems}
+Two independently developed systems sit closer to PADS than the above and warrant explicit differentiation.
+
+Venkatesha et al.~\cite{venkatesha2025edgecloud} propose a speculative edge-cloud decoding framework in which a small draft model runs on an edge device (a Jetson Nano or Jetson Orin) and a large target model with auxiliary early-exit adapters runs on a cloud A100 server; early, partially-verified tokens from the server are used to \emph{preemptively draft} the next batch of tokens on the edge device before the final verification round completes, exploiting otherwise-idle client time during the network round-trip. This is architecturally close to PADS in spirit -- both convert idle time around a verification boundary into useful precomputation, and both preserve the correctness guarantee of standard speculative decoding -- but differs on every dimension that matters for our claim: it requires two separately-trained models and a persistent network connection to a cloud server rather than a single self-speculative model running fully offline; the idle time it exploits is the client-server communication and verification latency of an already-complete prompt, not the human pause before a spoken or typed turn has finished; and its reported speedups (up to 35\% over cloud autoregressive decoding, plus an additional 11\% from preemptive drafting) are measured with an NVIDIA A100 in the loop, not on CPU-only hardware.
+
+Ok et al.~\cite{ok2025speculativeetd} propose SpeculativeETD, which -- despite its name -- applies the cheap-model-then-expensive-model cascade structure to the end-turn \emph{detection} problem itself: a $\sim$200K-parameter on-device GRU continuously classifies speech as speaking or non-speaking, and only when it detects silence does a much larger server-side Wav2Vec2 model perform the harder classification of whether that silence is a mere pause or a genuine end of turn. This is the closest work by name and by structural analogy to speculative decoding, and we adopt its terminology for the pause/gap distinction. It does not, however, touch the language model's computation at all: its contribution stops at deciding \emph{whether} to invoke the downstream LLM, and its heavier stage still depends on a server round-trip. PADS instead uses the same class of signal (a lightweight, continuously-running predictor over partial speech) to decide \emph{how deep} into an already-invoked, fully local model's layers to compute, before the turn-detection decision is even finalized.
+
+To our knowledge, no prior system combines turn-level, pre-endpoint predictive triggering with model-\emph{depth} extension within a single self-speculative model evaluated on CPU-only hardware. This is the compound gap PADS targets, precisely bounded by the two systems above on either side of it.
+
+\subsection{On-device inference characterization and turn-taking prediction}
+Independent surveys and measurement studies establish both halves of our premise as live, open questions rather than settled ones. On the hardware side, recent work directly measuring CPU-versus-GPU on-device inference reports thread-scaling plateaus consistent with a memory-bandwidth-bound regime under quantization~\cite{cpuvsgpu2025}, and memory-pressure-aware serving systems such as prima.cpp~\cite{primacpp2025} demonstrate that consumer, resource-constrained hardware is an active target for large-model inference research, without characterizing self-speculative early exit specifically. On the turn-taking side, Voice Activity Projection~\cite{ekstedt2022vap} and its real-time, CPU-capable implementation~\cite{inoue2024realtime}, together with Google's jointly-optimized ASR/turn-taking predictor~\cite{chang2022turntaking} (97\% recall, 85\% precision at 100\,ms added latency) and Google's earlier predictive-ASR work that speculatively executes downstream processing before a final endpoint is confirmed~\cite{predictivease2023}, establish that lightweight, CPU-feasible, pre-endpoint predictive signals are a mature, validated capability independent of this work. PADS's contribution is not either capability in isolation, but their fusion with model-depth extension, characterized on hardware neither line of work targets.
+
+\section{System Design}
+\label{sec:design}
+
+\subsection{Overview}
+The accompanying project repository includes a block diagram of the full pipeline, omitted here as a floating figure pending a camera-ready pass; the architecture is summarized in prose. Streaming partial speech or text feeds two lightweight, continuously-running components: a turn-taking predictor estimating $p_{\text{end}}(t)$, the probability the current turn will end within a short horizon, and a dialogue-act classifier estimating $p_{\text{deep}}(t)$, the probability that the eventual response will require full-depth reasoning rather than a shallow, low-latency response. A conservative trigger policy (Section~\ref{sec:trigger}) combines both signals to decide whether to begin extending the self-speculative model to full depth during the pause, ahead of confirmed end-of-turn.
+
+\subsection{Depth extension mechanism}
+We adopt LayerSkip-style self-speculative decoding~\cite{elhoushi2024layerskip} as the underlying depth-extension mechanism rather than proposing a new one: a model trained with layer dropout and a shared early-exit loss produces a draft token from an early exit layer $k$, and, when triggered, continues computation through the remaining layers $k{+}1,\dots,N$ to produce a verified token, reusing the KV cache already populated by the shallow pass. This choice is deliberate: it inherits a proven correctness guarantee (the final output distribution is identical whether or not early exit is used) and avoids re-deriving a mechanism that is already well-studied, concentrating the contribution on \emph{when} the deep pass is triggered rather than \emph{how} it is computed.
+
+\subsection{Trigger policy}
+\label{sec:trigger}
+Let $\tau_{\text{end}}$ and $\tau_{\text{deep}}$ be calibrated confidence thresholds. The pause-time trigger fires at time $t$ iff
+\begin{equation}
+p_{\text{end}}(t) \geq \tau_{\text{end}} \ \wedge\ p_{\text{deep}}(t) \geq \tau_{\text{deep}}.
+\label{eq:trigger}
+\end{equation}
+We use a conjunctive (AND) rather than disjunctive (OR) gate deliberately: a disjunctive gate roughly doubles the false-trigger rate for a comparable increase in true-trigger rate, and because a false trigger's cost is a discarded speculative branch rather than an incorrect output, the design goal is to keep false triggers \emph{cheap and rare}, not to maximize recall on either signal individually. We treat the exact values of $\tau_{\text{end}}$ and $\tau_{\text{deep}}$ as parameters to be calibrated empirically (Section~\ref{sec:evaluation}, Go/No-Go~3) rather than fixed a priori.
+
+\subsection{Expected latency model}
+Let $T_{\text{shallow}}$ and $T_{\text{deep}}$ denote the wall-clock cost of the shallow and full-depth passes respectively on the target hardware, and let $T_{\text{pause}}$ denote the duration of the exploitable pause. Absent PADS, perceived latency after end-of-turn confirmation is $T_{\text{deep}}$ whenever deep reasoning is required. Under PADS, if the trigger fires correctly at pause onset and $T_{\text{pause}} \geq T_{\text{deep}}$, the perceived post-confirmation latency approaches the residual $\max(0, T_{\text{deep}} - T_{\text{pause}})$; if $T_{\text{pause}} < T_{\text{deep}}$, the visible saving is bounded by $T_{\text{pause}}$ itself. This immediately implies the premise is falsifiable on timing grounds alone -- if $T_{\text{deep}}$ on the target hardware exceeds typical pause durations by a wide margin, the achievable saving is small regardless of trigger accuracy, independent of any modeling choice. This is formalized as Go/No-Go~2 (Section~\ref{sec:evaluation}).
+
+\subsection{Two-tier contribution structure}
+We separate the contribution into a \emph{safe core} -- a systematic characterization of self-speculative early-exit decoding on CPU-only, memory-bandwidth-bound hardware, with a dialogue-act-driven exit policy compared against the standard token-confidence exit policy used in prior work -- and a \emph{stretch layer}, the pause-time trigger of Section~\ref{sec:trigger} itself. The safe core does not depend on the stretch layer succeeding and is independently reportable; the stretch layer is additive on top of the same infrastructure. This structure is a design decision, not an afterthought: it is intended to ensure that an honest negative result on the harder, more novel half of the claim (e.g., if Go/No-Go~1 or~2 fails) still yields a complete, correctly-scoped contribution rather than requiring the project to be abandoned or the claim retroactively inflated.
+
+\section{Evaluation Methodology}
+\label{sec:evaluation}
+
+\subsection{Target hardware and correctness requirement}
+All inference-time latency, throughput, memory, and energy measurements reported in the completed study will be collected on a Dell Latitude 5490 (8th-generation Intel CPU, Intel UHD 620 integrated graphics, 16\,GB RAM, no discrete GPU) running models in GGUF format via llama.cpp~\cite{llamacpp}. Training and fine-tuning (continued pretraining of the early-exit backbone, dialogue-act classifier training) will use a local RTX~4070 and rented cloud GPU capacity, but no number reported as an inference/latency/energy result will originate from GPU hardware, to keep the central hardware claim honest and independently reproducible on commodity hardware. Every configuration must satisfy the same correctness property as standard speculative decoding: a discarded speculative branch must not alter the final output token distribution relative to non-speculative full-depth decoding.
+
+\subsection{Pre-registered feasibility experiments (Go/No-Go tests)}
+Table~\ref{tab:gonogo} lists seven falsification experiments, each with an explicit kill condition and the action taken if that condition is met, executed prior to full system implementation. This ordering is deliberate: several of the seven target assumptions that, if false, would invalidate downstream engineering effort at low cost if caught early and high cost if caught late.
+
+\begin{table*}[t]
+\centering
+\caption{Pre-registered Go/No-Go feasibility experiments}
+\label{tab:gonogo}
+\begin{tabular}{@{}p{0.04\textwidth}p{0.16\textwidth}p{0.34\textwidth}p{0.36\textwidth}@{}}
+\toprule
+\textbf{\#} & \textbf{Experiment} & \textbf{Method} & \textbf{Kill condition / action if triggered} \\
+\midrule
+1 & Bandwidth-vs-compute regime & Vary thread count 1--8 on a quantized 7--9B GGUF model, measure tokens/sec & Throughput plateau past 4--5 threads indicates a memory-bandwidth-bound regime; reframe as a characterization result and/or reduce model size \\
+2 & Pause-duration feasibility & Compare real pause-duration statistics (Switchboard/CallHome) against measured per-step depth-extension latency on target hardware & Median pause shorter than one meaningful depth-extension step invalidates the timing premise as designed; redesign granularity rather than re-tune thresholds \\
+3 & Off-the-shelf / fine-tuned early-exit adaptability & Measure logit-similarity-based early-exit adaptability score~\cite{wei2026diminishing} for candidate base and fine-tuned checkpoints before committing to one & Adaptability too low even after fine-tuning; reconsider model family or size per~\cite{wei2026diminishing}'s finding that larger dense models retain more redundancy \\
+4 & Thermal stability & 30-minute sustained inference loop, log CPU frequency/temperature & Significant throttling; adopt fixed warm-up period and discard-first-runs as a permanent benchmarking protocol \\
+5 & RAM budget & Load intended models/components at intended quantization, measure peak RSS with OS overhead & Pipeline does not fit in 16\,GB with headroom; reduce model size before adding engineering complexity \\
+6 & Energy tooling availability & Attempt RAPL via \texttt{turbostat}/\texttt{powertop} on target hardware & Tooling reports no usable data; adopt an external USB in-line power meter as the energy-measurement method \\
+7 & Fresh literature scoop check & Recurring biweekly targeted search for the specific fusion described in Section~\ref{sec:design} & Exact fusion published; reposition framing around whichever half of the claim remains differentiated \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Baselines}
+All baselines will be reproduced locally on the target hardware rather than cited from other papers' reported numbers, to avoid conflating hardware effects with methodological ones: plain (non-speculative) decoding; standard two-model speculative decoding~\cite{leviathan2023fast}; plain cascading/routing between a small and large model; and LayerSkip's own published configuration~\cite{elhoushi2024layerskip} reproduced on this hardware.
+
+\subsection{Metrics}
+Time-to-first-token, tokens/sec, peak RAM, energy draw (RAPL/turbostat or USB power-meter fallback per Go/No-Go~6), acceptance rate of the self-speculative mechanism, and false-trigger / true-trigger rate of the pause-time policy. All reported values will be means over multiple runs with 95\% confidence intervals, collected under a fixed CPU governor with no competing background load, following a standardized warm-up-and-discard protocol informed by Go/No-Go~4.
+
+\section{Status and Verified Results}
+\label{sec:status}
+
+Consistent with the pre-registered design in Section~\ref{sec:evaluation}, this draft reports only what has been executed and verified to date; it does not report placeholder, simulated, or projected benchmark numbers as if they were measured results.
+
+\begin{itemize}
+    \item \textbf{Toolchain verification.} The llama.cpp build toolchain was cloned and configured for a CPU-only target (\texttt{-DGGML\_NATIVE=ON}, no CUDA/Metal backend). CMake configuration succeeded without error. During an initial build attempt, the default build target was found to unnecessarily pull in an npm-based embedded web UI component (server-only, irrelevant to headless CLI inference); this was identified and disabled (\texttt{-DLLAMA\_BUILD\_UI=OFF}) as a correction to the build configuration. Compilation of the core inference library subsequently proceeded with zero errors before being halted by an environment time constraint unrelated to build correctness (a single-core verification environment, not the target hardware).
+    \item \textbf{Software components implemented and unit-tested.} A conservative, asymmetric trigger-policy module implementing Equation~\ref{eq:trigger} was implemented and validated against a unit test suite (six tests covering threshold boundary conditions, out-of-range input handling, and outcome classification), all passing. A benchmark-harness module implementing the aggregation, confidence-interval, and structured-logging requirements of Section~\ref{sec:evaluation} was implemented and validated via a self-test mode using synthetic timing data, whose numbers are explicitly excluded from any reported result.
+    \item \textbf{Not yet executed.} Go/No-Go experiments 1--7 (Table~\ref{tab:gonogo}) require the target hardware and, for experiments 2 and 3, real conversational-pause corpora and real fine-tuned or off-the-shelf early-exit checkpoints, none of which were available in the software-verification environment used for this draft. These constitute the immediate next phase of the study.
+\end{itemize}
+
+\section{Threats to Validity}
+
+\textbf{Construct validity.} The early-exit adaptability finding of~\cite{wei2026diminishing} indicates that not every candidate base model will exhibit the redundancy self-speculative decoding depends on; Go/No-Go~3 is designed to detect this per-model rather than assume it.
+
+\textbf{Internal validity.} Thermal throttling and background system load on consumer laptop hardware can confound latency measurements if not controlled; Go/No-Go~4 and the fixed-protocol requirement in Section~\ref{sec:evaluation} are intended to address this directly rather than discover it post hoc.
+
+\textbf{External validity.} Results on one specific laptop model (Dell Latitude 5490) may not generalize to all CPU-only consumer hardware; we regard this as a characterization of a representative device class rather than a universal claim, consistent with prior single-device edge-inference studies~\cite{venkatesha2025edgecloud}.
+
+\textbf{Conclusion validity / novelty risk.} Section~\ref{sec:related} identifies the two closest prior systems and the precise dimensions of difference; Go/No-Go~7 treats the possibility of being independently scooped on the compound claim as an ongoing, monitored risk rather than a one-time check.
+
+\section{Conclusion and Future Work}
+
+We have described Pause-Aware Depth Scheduling, a mechanism for triggering self-speculative early-exit depth extension during the pause preceding a conversational turn's end, positioned precisely against the two closest prior systems we identified and scoped into an independently defensible safe-core characterization plus an additive stretch contribution. A pre-registered set of seven falsification experiments is designed to invalidate the premise cheaply before deep implementation investment, consistent with treating this as a checkable empirical claim rather than a vision statement. Future work comprises executing the outstanding Go/No-Go experiments on the target hardware, implementing and benchmarking the safe-core pipeline against reproduced baselines, and -- contingent on an internal go/continue checkpoint -- implementing and evaluating the pause-time stretch mechanism itself.
+
+\section*{Acknowledgment}
+\todo{Guide and evaluator acknowledgments, Open Lab I/II course context.}
+
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{99}
+
+\bibitem{elhoushi2024layerskip} M. Elhoushi \emph{et al.}, ``LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding,'' in \emph{Proc. 62nd Annu. Meeting Assoc. Comput. Linguistics (ACL)}, 2024.
+
+\bibitem{leviathan2023fast} Y. Leviathan, M. Kalman, and Y. Matias, ``Fast Inference from Transformers via Speculative Decoding,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2023.
+
+\bibitem{chen2025clasp} L. Chen \emph{et al.}, ``CLaSp: In-Context Layer Skip for Self-Speculative Decoding,'' in \emph{Proc. 63rd Annu. Meeting Assoc. Comput. Linguistics (ACL)}, 2025.
+
+\bibitem{xu2025specee} J. Xu \emph{et al.}, ``SpecEE: Accelerating Large Language Model Inference with Speculative Early Exiting,'' in \emph{Proc. 52nd Annu. Int. Symp. Comput. Archit. (ISCA)}, 2025.
+
+\bibitem{quantspec2025} ``QuantSpec: Self-Speculative Decoding with Hierarchical Quantized KV Cache,'' arXiv:2502.10424, 2025.
+
+\bibitem{wei2026diminishing} R. Wei, R. Du, H. Yu, D. Tiwari, J. Li, Z. Xu, and H. Wang, ``The Diminishing Returns of Early-Exit Decoding in Modern LLMs,'' arXiv:2603.23701, 2026.
+
+\bibitem{ong2024routellm} I. Ong \emph{et al.}, ``RouteLLM: Learning to Route LLMs with Preference Data,'' arXiv:2406.18665, 2024.
+
+\bibitem{mixllm2025} ``MixLLM: Dynamic Routing in Mixed Large Language Models,'' arXiv:2502.18482, 2025.
+
+\bibitem{lookahead2025} ``Lookahead Routing for Large Language Models,'' arXiv:2510.19506, 2025.
+
+\bibitem{venkatesha2025edgecloud} Y. Venkatesha, S. Kundu, and P. Panda, ``Fast and Cost-effective Speculative Edge-Cloud Decoding with Early Exits,'' arXiv:2505.21594, 2025.
+
+\bibitem{ok2025speculativeetd} H. Ok, S. Yoo, and J. Lee, ``Speculative End-Turn Detector for Efficient Speech Chatbot Assistant,'' arXiv:2503.23439, 2025.
+
+\bibitem{cpuvsgpu2025} ``Challenging GPU Dominance: When CPUs Outperform for On-Device LLM Inference,'' arXiv:2505.06461, 2025.
+
+\bibitem{primacpp2025} ``Prima.cpp: Fast 30--70B LLM Inference on Heterogeneous and Low-Resource Home Clusters,'' arXiv:2504.08791, 2025.
+
+\bibitem{ekstedt2022vap} E. Ekstedt and G. Skantze, ``Voice Activity Projection: Self-Supervised Learning of Turn-Taking Events,'' arXiv:2205.09812, 2022.
+
+\bibitem{inoue2024realtime} K. Inoue \emph{et al.}, ``Real-time and Continuous Turn-taking Prediction Using Voice Activity Projection,'' arXiv:2401.04868, 2024.
+
+\bibitem{chang2022turntaking} S. Chang, B. Li, T. N. Sainath, C. Zhang, T. Strohman, Q. Liang, and Y. He, ``Turn-Taking Prediction for Natural Conversational Speech,'' arXiv:2208.13321, 2022.
+
+\bibitem{predictivease2023} ``Personalized Predictive ASR for Latency Reduction in Voice Assistants,'' arXiv:2305.13794, 2023.
+
+\bibitem{stivers2009universals} T. Stivers \emph{et al.}, ``Universals and Cultural Variation in Turn-Taking in Conversation,'' \emph{Proc. Natl. Acad. Sci.}, vol. 106, no. 26, pp. 10587--10592, 2009.
+
+\bibitem{heldner2010pauses} M. Heldner and J. Edlund, ``Pauses, Gaps and Overlaps in Conversations,'' \emph{J. Phonetics}, vol. 38, no. 4, pp. 555--568, 2010.
+
+\bibitem{llamacpp} G. Gerganov \emph{et al.}, ``llama.cpp,'' \url{https://github.com/ggml-org/llama.cpp}, accessed 2026.
+
+\end{thebibliography}
+
+\end{document}

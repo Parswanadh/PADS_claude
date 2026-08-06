@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.aux
+*.log
+*.out
+dialogue_act_model.joblib

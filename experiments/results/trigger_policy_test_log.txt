@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/claude/hnia-pads/src/trigger_policy
+collecting ... collected 6 items
+
+test_policy.py::test_default_config_requires_both_signals_high PASSED    [ 16%]
+test_policy.py::test_boundary_values_are_inclusive PASSED                [ 33%]
+test_policy.py::test_out_of_range_probabilities_raise PASSED             [ 50%]
+test_policy.py::test_resolve_classifies_outcomes_correctly PASSED        [ 66%]
+test_policy.py::test_stats_reports_trigger_rate PASSED                   [ 83%]
+test_policy.py::test_asymmetric_thresholds_are_independently_configurable PASSED [100%]
+
+============================== 6 passed in 0.03s ===============================
