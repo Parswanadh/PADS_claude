@@ -37,7 +37,7 @@ compile step is deferred" below.
   other foreground apps. **Fixed**: script now computes `nproc - 1` (minimum
   1) and uses that for `-j`.
 
-## Why the compile step is deferred to a separate session
+## Why the compile step was deferred at the time of writing above
 
 `cmake --build` is the actual CPU/RAM-heavy step (potentially several
 minutes of sustained multi-core compilation). Session context at configure
@@ -48,6 +48,45 @@ thresholds at every check, but the trend plus this being a shared, actively
 used workstation (Docker Desktop VM, browser, editor, and another agent
 session all running concurrently) argued for keeping this unit of work
 small and stopping at a clean, verified checkpoint rather than kicking off
-a multi-minute heavy compile in the same breath. Compiling is its own
-atomic unit of work for a future session, run with a fresh resource check
-and the now-fixed conservative `-j` default.
+a multi-minute heavy compile in the same breath. Compiling was deferred to
+a separate session, run with a fresh resource check — see below.
+
+## Compile — actually run, 2026-08-07 (later session, same day)
+
+Fresh resource check before starting: available RAM 7.6GB, load average
+0.32/0.35/0.69 (down sharply from the 3.22 peak earlier in the day), no
+active swap churn, 325GB free disk. Good conditions — proceeded.
+
+```
+timeout 900 cmake --build build --config Release --target llama-cli llama-quantize -j 21
+```
+
+(`-j 21` = `nproc - 1` on this 22-thread machine, using the now-fixed
+script default.)
+
+**Result: PASSED.** Wall clock 04:40:34–04:41:55 — **~81 seconds**, far
+faster than the up-to-15-minute timeout budgeted. (Building just these two
+targets still pulls in a fair amount of the tree — ggml, the common
+library, mtmd, and server-context libraries are shared dependencies — but
+it's well short of a full `--target all` build.) Zero build errors.
+
+Verified the binaries actually work, not just that the build exited 0:
+
+```
+$ ./build/bin/llama-cli --version
+version: 1 (15586e2)
+built with GNU 13.3.0 for Linux x86_64
+```
+
+- `build/bin/llama-cli`: 1.2MB, ELF 64-bit PIE, dynamically linked, not
+  stripped.
+- `build/bin/llama-quantize`: 17.9KB (thin wrapper linking against
+  `libllama-quantize-impl.so`), same format.
+- Total `build/` directory: 123M on disk.
+- RAM immediately after build: 7.6GB available (essentially unchanged from
+  before — no memory pressure observed during the ~81s compile).
+
+**This machine can now run `llama-cli` and `llama-quantize`.** Still
+missing: an actual GGUF model to run them against (no `models/` directory,
+no downloaded weights — see `PROGRESS.md`). Go/No-Go tests 1, 3, 4, and 6
+remain blocked on that, not on the build anymore.

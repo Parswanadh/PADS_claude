@@ -192,3 +192,47 @@ This is exactly the kind of caution CLAUDE.md asks for, not an incident.
 
 **Delegated to agy:** None. Clone/configure/script-fix are direct execution
 and a small, safety-critical config change — not content generation.
+
+## 2026-08-07 — session 5
+
+**Did:** Re-verified state fresh. System had calmed down substantially
+since last session — available RAM back up to 7.6GB, load average dropped
+to 0.32 (from the 3.22 peak), no swap churn — good conditions for the
+compile step deferred last session. Ran it:
+`timeout 900 cmake --build build --config Release --target llama-cli llama-quantize -j 21`
+(21 = nproc-1 on this 22-thread machine, using the safety fix from last
+session). Verified the resulting binaries actually run
+(`llama-cli --version`), not just that the build exited 0. Appended the
+real compile result to
+`experiments/results/llamacpp_build_verification_realhw_log.md` (same file
+as last session's clone+configure entry, since it's the natural
+continuation of that log, not a separate artifact).
+
+**Found:** Build **PASSED** — ~81 seconds wall clock (04:40:34–04:41:55),
+far under the 900s timeout budget. Zero build errors. `llama-cli` (1.2MB)
+and `llama-quantize` (17.9KB) both produced and confirmed working via
+`--version`. RAM stayed at ~7.6GB available throughout — no memory pressure
+during the compile, confirming the nproc-1 conservative thread count was a
+reasonable choice on this machine under these conditions. Total build
+output: 123M on disk.
+
+**Passed/failed:** Not a Go/No-Go test row (SKILL.md build-order §1,
+environment setup) — but this is what tests 1/3/4/6 were blocked on. That
+blocker is now cleared; the remaining blocker for those four tests is
+solely the missing GGUF model weights.
+
+**Next:** Acquire a model — per `docs/03_SKILL.md`, start from a released
+LayerSkip checkpoint (not from-scratch training), convert to GGUF only
+after any fine-tuning, quantize last, from F16 never from an
+already-quantized file. This is a bigger, network-and-disk-heavy unit of
+work than anything done so far (likely multi-GB) and deserves its own
+careful session: confirm disk budget before starting, verify checksums,
+and pick the right starting checkpoint size deliberately (small enough for
+this ~15GB-RAM class of machine, matching the spirit of Go/No-Go Test 5's
+budget check) rather than grabbing the first thing found.
+
+**Safety events:** None. RAM/disk/load all stable and comfortably within
+CLAUDE.md's thresholds throughout; no swap growth during the compile.
+
+**Delegated to agy:** None — compiling is explicitly listed in CLAUDE.md as
+execution that stays with Claude Code, never agy.
