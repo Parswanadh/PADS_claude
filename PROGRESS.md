@@ -236,3 +236,53 @@ CLAUDE.md's thresholds throughout; no swap growth during the compile.
 
 **Delegated to agy:** None — compiling is explicitly listed in CLAUDE.md as
 execution that stays with Claude Code, never agy.
+
+## 2026-08-07 — session 6
+
+**Did:** Re-verified state fresh (system very calm: 7.7GB available RAM,
+load 0.24, 324GB free disk). Per the build order, the last remaining
+prerequisite before Go/No-Go tests 1/3/4/6 can run is actual model weights.
+Rather than jumping straight to a multi-GB download (network/disk-heavy,
+deserves its own session), did the research/decision step first: verified
+via WebSearch + WebFetch (reading the actual HF model card, not trusting
+search snippets) which released LayerSkip checkpoint to start from.
+Confirmed `facebook/layerskip-llama3.2-1B` — 1B params, BF16 safetensors,
+~2GB, official Meta/FAIR release, base model, gated under FAIR
+Noncommercial Research License. Chose 1B specifically over the also-released
+7B/8B/70B LayerSkip variants to fit this machine's RAM budget (per Test 5's
+findings) and keep the first safe-core benchmark iteration fast. Then
+tested whether this machine's existing HF login (account `Havoc1904`,
+already authenticated from unrelated prior use) already has gated access,
+by requesting only the small `config.json`/`README.md` files rather than
+the full weights.
+
+**Found:** Access is genuinely **not yet granted** —
+`hf download facebook/layerskip-llama3.2-1B config.json README.md`
+returned `Error: Access denied. This repository requires approval.` This is
+a real blocker, not something to route around: gated HF repos require a
+human to visit the model page and accept Meta's license through the web UI,
+which isn't something Claude Code can do on the user's behalf. Documented
+the full decision, verified specs, and this exact blocker in
+`experiments/results/model_acquisition_plan.md` so a future session (or the
+user) doesn't need to re-research any of this.
+
+**Passed/failed:** Not a Go/No-Go test row — this is SKILL.md build-order
+§1 (environment setup, model acquisition). No fabricated download or
+pretended success; the honest result is "blocked, action needed from a
+human with HF access."
+
+**Next:** **Needs a human action first**: visit
+https://huggingface.co/facebook/layerskip-llama3.2-1B while logged in as
+the `Havoc1904` HF account and accept the license. Once granted, the next
+session can run the actual ~2GB download into `models/checkpoints/`, verify
+it, then proceed to GGUF conversion and quantization per
+`docs/03_SKILL.md` §1. Until that's done, tests 1/3/4/6 stay blocked; Test 2
+(pause-duration corpus) remains a separate, parallel-track blocker not
+related to this one.
+
+**Safety events:** None. All work this session was network metadata
+queries (WebSearch, two small-file HF requests) and local file writes — no
+heavy compute, no large download attempted.
+
+**Delegated to agy:** None — this was verification research (reading real
+model cards and testing real API access), not content generation.
