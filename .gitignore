@@ -5,3 +5,4 @@ __pycache__/
 *.log
 *.out
 dialogue_act_model.joblib
+.venv/

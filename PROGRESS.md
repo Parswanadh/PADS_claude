@@ -49,3 +49,48 @@ load, no compile, no agy invocation for execution — only `agy models`/
 used agy's `models` and `--help` subcommands to confirm the exact model
 identifier for future delegation — reviewed directly, not generative output
 requiring review-before-commit.
+
+## 2026-08-07 — session 2
+
+**Did:** Re-verified state fresh (git log, git status, go_no_go_results.md,
+system resources) rather than trusting session 1's context. Confirmed
+system was still stable (7.4GB available RAM, 326GB free disk, no active
+swap churn). Identified Go/No-Go Test 5 (RAM budget) as the next unit of
+work per CLAUDE.md/SKILL.md. Test 5 needs `psutil` which wasn't installed,
+so first did environment setup (SKILL.md §1 precondition): created a
+project-local `.venv`, installed `setup/requirements.txt`
+(numpy/scikit-learn/psutil/pytest, all prebuilt wheels, no compilation, fast
+and low-memory) into it, and added `.venv/` to `.gitignore`. Then ran
+`experiments/go_no_go/test5_ram_budget.py` under `timeout 60`, watching RAM
+before and after (stable throughout, no memory pressure).
+
+**Found:** The script runs cleanly (exit 0) and reports this dev machine's
+system RAM (15.13GB total, 7.34GB available at run time — total is slightly
+under the Latitude 5490's nominal 16GB, expected variance). But its
+"budget_ok" check is a static arithmetic check (16 − 3 > 0), not an actual
+measurement of pipeline memory use — it would pass regardless of real model
+size. The real test (summing RSS across llama.cpp + dialogue-act classifier
++ turn-taking predictor processes) is blocked: no model weights exist yet
+(`models/` doesn't exist, no GGUF files anywhere in the repo), and this
+isn't the target hardware. Logged this honestly as **PARTIAL**, not PASS, in
+`experiments/go_no_go_results.md` — the script is verified correct but the
+real number doesn't exist yet.
+
+**Passed/failed:** Test 5 = PARTIAL (script verified, full measurement
+blocked pending model weights + target hardware). No fabricated numbers.
+
+**Next:** Remaining Go/No-Go tests (1, 2, 3, 4, 6, 7) — most of these
+(bandwidth-vs-compute, acceptance rate, thermal stability, energy tooling)
+require an actual GGUF model, which requires network access to download
+weights and is a bigger, heavier unit of work than this session's. Test 7
+(literature scoop check) is content/research, not heavy execution, and is a
+reasonable candidate for the next iteration since it needs no model weights
+and no heavy compute. Test 2 (pause-duration feasibility) needs a
+Switchboard/CallHome corpus, also not yet present.
+
+**Safety events:** None. RAM stayed at 7.3–7.4GB available throughout;
+pip installs used prebuilt wheels (no compilation spike); no swap growth
+observed.
+
+**Delegated to agy:** None this session — venv setup and running an
+existing test script are direct execution, not content/code generation.
