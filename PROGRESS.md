@@ -859,3 +859,61 @@ each run wrapped in `timeout 60`, all 8 runs completed well within budget.
 
 **Delegated to agy:** None — script debugging and test execution stayed
 with Claude Code.
+
+## 2026-08-07 — session 19 — GO/NO-GO TEST 3: PASSED (86.4% acceptance rate)
+
+**Did:** With user go-ahead, moved to Test 3 (off-the-shelf acceptance
+rate). Cloned `github.com/facebookresearch/LayerSkip` for its own
+benchmark scripts (a completely different codebase than llama.cpp — plain
+PyTorch/transformers, not GGUF). Its `requirements.txt` had multiple exact
+pins with no Python 3.14 wheels (torch==2.5.1, pandas==2.2.2,
+sentencepiece==0.2.0) — relaxed each after hitting real build failures, not
+preemptively. Installed into a dedicated `.venv-layerskip` (CPU-only
+torch, kept separate from `.venv-convert`'s different pinned versions).
+Then hit and fixed, one at a time, investigating each rather than retrying
+blindly: (1) `torchrun` + `device_map="auto"` triggered a transformers
+4.50.0 accelerator-sharding bug on CPU-only — patched `generate.py`. (2)
+transformers 4.50.0 requires precomputed `position_embeddings` passed to
+each decoder layer (previously internal) — patched all 4 call sites in
+`self_speculation/llama_model_utils.py`. (3) `LlamaDecoderLayer.forward()`
+now returns `(hidden_states,)` only, not `(hidden_states, past_key_values)`
+— cache mutates in place now; fixed the same 4 sites. (4) A genuine Python
+3.14 incompatibility in `dill`'s pickle internals broke HF `datasets`'
+cache-fingerprint hashing, even at dill's latest release (0.4.1, tried and
+still broken) — routed around it via `--dataset custom_jsonl` (pure
+pandas, no `datasets` library involved), using a small hand-authored
+conversational prompt set instead of the default CNN/DM summarization data
+— which also matches `docs/03_SKILL.md`'s own stated preference for
+conversational-style test prompts. All three transformers/torch fixes
+preserved as `experiments/results/layerskip_python314_transformers450_compat.patch`
+since `LayerSkip/` itself is gitignored (external clone).
+
+**Found:** Real acceptance rate: 89.6%, 84.9%, 86.8%, 90.4%, 84.6%, 100%,
+75.1%, 80.1% across 8 samples — **mean 86.4%**, using `--exit_layer 3`
+(the model-card-correct value for this 1B checkpoint) and `--no_sample`
+(greedy, matching the LayerSkip paper's own reported methodology — also
+sidesteps a real float16 division-by-zero edge case in the sampling-mode
+code path). This is well above "too low to matter." Caveat logged
+honestly: this base (non-instruction-tuned) model produced highly
+repetitive text on unstructured prompts, which likely inflates acceptance
+rate somewhat (repeated continuations are easier for the draft to
+predict) — flagged as a real number, not a final paper-reportable one
+(small n, synthetic prompts, dev hardware).
+
+**Passed/failed:** **Test 3 = PASSED.** Combined with Test 1's FAILED
+(bandwidth-bound, expected) and Test 6's PASSED, three of seven Go/No-Go
+tests now have real, non-fabricated results.
+
+**Next:** Tests 2 (dual-blocked: LDC corpus + now also needs real
+decode-step timing, which is achievable now that we have a working
+pipeline) and 4 (thermal, needs user go-ahead for the 30-min run) remain.
+Given Test 3's real self-speculative pipeline now works end-to-end, the
+decode-step-timing half of Test 2 could be measured for real if useful.
+
+**Safety events:** None. RAM stayed 6.2-6.6GB available throughout the
+entire LayerSkip setup, debugging, and benchmark run (~15 minutes of
+active work); each run wrapped in `timeout 300`.
+
+**Delegated to agy:** None — all debugging (reading transformers source,
+patching LayerSkip's code, dependency troubleshooting) and execution
+stayed with Claude Code, consistent with CLAUDE.md's execution rule.

@@ -7,5 +7,7 @@ __pycache__/
 dialogue_act_model.joblib
 .venv/
 .venv-convert/
+.venv-layerskip/
 llama.cpp/
+LayerSkip/
 models/
