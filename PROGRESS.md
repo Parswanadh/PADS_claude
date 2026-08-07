@@ -286,3 +286,52 @@ heavy compute, no large download attempted.
 
 **Delegated to agy:** None — this was verification research (reading real
 model cards and testing real API access), not content generation.
+
+## 2026-08-07 — session 7
+
+**Did:** Re-verified state fresh (system calm: 7.6GB available RAM, load
+0.79–0.99, 324GB free disk). Re-checked HF gated access for the model —
+still denied, as expected (no action taken by the user yet). Per the note
+left for this session, switched to the parallel-track Go/No-Go Test 2
+(pause-duration feasibility) since the model download stayed blocked.
+Investigated the corpus half of Test 2: confirmed Switchboard/CallHome
+require an LDC license not present on this machine, then searched the
+literature for a citable stand-in pause-duration statistic.
+
+**Found:** No verified Switchboard/CallHome-specific pause-duration number
+exists in what was checked. More importantly, caught a near-miss: an
+initial web search summary attributed "median gap 389ms" to the Switchboard
+corpus via a 2015 Frontiers paper; fetching that paper directly showed it
+only reports Switchboard *overlap* statistics, not gaps, and that the gap
+number was a synthesis artifact conflating citations to other papers.
+Followed the trail to Heldner & Edlund (2010) and fetched that PDF
+directly too — it analyzes Dutch, Scottish, and Swedish corpora, not
+Switchboard/CallHome at all. Its literature-review table compiles gap
+durations from small, methodologically disparate 1938–2003 studies (some
+requiring face-to-face eye contact), none of them Switchboard. Documented
+all of this, including the caught misattribution, in
+`experiments/results/pause_duration_corpus_research_notes.md` so nobody
+downstream reuses the wrong number. This is exactly the kind of thing
+CLAUDE.md's "never fabricate a benchmark number" rule is for — the
+temptation to just use the plausible-looking 389ms figure and move on was
+real, and it would have been wrong.
+
+**Passed/failed:** Test 2 logged as **BLOCKED (dual dependency, neither
+resolved)** in `experiments/go_no_go_results.md` — an honest, non-fabricated
+result. Not PASS, not FAIL; both required inputs are genuinely unavailable
+right now.
+
+**Next:** Two independent unblocks needed: (1) the human action already
+flagged (accept the HF license for model access, which also unblocks the
+decode-step-time half of this test), and (2) either LDC corpus access (ask
+the user whether their institution already has a subscription — worth
+asking directly rather than assuming) or a more targeted literature search
+for a paper that explicitly computes gap statistics *from* Switchboard
+(e.g., checking whether NXT Switchboard Annotations, LDC2009T26, includes
+usable timing data under its more permissive license — not yet checked).
+
+**Safety events:** None. All work was web research (WebSearch/WebFetch)
+and local file writes — no heavy compute.
+
+**Delegated to agy:** None — this was literature verification requiring
+judgment about source reliability, not content generation.
