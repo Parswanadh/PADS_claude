@@ -681,3 +681,49 @@ pytest, mock-timing aggregation) — no heavy compute, RAM stayed flat.
 
 **Delegated to agy:** None — direct execution of existing, already-written
 scripts, not content/code generation.
+
+## 2026-08-07 — session 15
+
+**Did:** Re-verified state fresh (7.3GB available RAM, load 1.14-1.28,
+315GB disk — all still comfortably within thresholds, though disk trending
+down slightly session-over-session from various downloads). Re-checked HF
+gated model access — still denied (the user separately supplied a fresh HF
+token mid-conversation since the last logged session; confirmed via
+`hf auth whoami` it resolves to the same `Havoc1904` account already
+tried, and access was still denied even with that token — a token cannot
+bypass a repository gate that the account hasn't clicked through on the
+web UI, so this doesn't change the blocker, it just rules out "wrong
+token" as the cause). Did a final sweep for any remaining unblocked
+SKILL.md work before concluding: checked `src/turn_taking/README.md` —
+confirmed it explicitly requires the same LDC-gated corpus (or
+project-recorded audio) as Test 2, and is stretch-layer work correctly
+gated behind the safe-core pipeline (itself gated behind all 7 Go/No-Go
+tests) per the build order, so implementing it now would be jumping ahead,
+not legitimate unblocked work.
+
+**Found:** No new unblocked, non-busywork unit of SKILL.md build-order
+work exists right now. Every remaining Go/No-Go test needs either the
+gated model (1, 3), the gated model + LDC corpus (2), explicit user
+go-ahead for a 30-minute sustained load (4), or is already resolved (5
+partial, 6 passed, 7 not due again until ~2026-08-21). The manuscript
+audit, hardware-agnostic component re-verification, and llama.cpp
+build/inference verification from recent sessions covered the genuinely
+available independent work already.
+
+**Passed/failed:** N/A — no test run this session. Documenting the honest
+"nothing further to do independently right now" state, per the explicit
+instruction not to invent busywork.
+
+**Next:** Unchanged: HF license acceptance (still not registering — worth
+double-checking the acceptance actually completed on huggingface.co, since
+neither the original token nor the new one shows access), LDC access
+confirmation, and go-ahead for Test 4. Once the model unblocks, the
+concrete next steps are already documented and ready: download per
+`model_acquisition_plan.md`, then convert to GGUF (F16) and quantize with
+the already-built `llama-quantize`, then Go/No-Go tests 1 and 3.
+
+**Safety events:** None. Only read-only checks this session (HF access
+test, reading an existing README) — no execution.
+
+**Delegated to agy:** None — this was a status/blocker re-check, not
+content generation.
