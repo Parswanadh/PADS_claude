@@ -639,3 +639,45 @@ gaps (model stand-in, lm-sensors) are resolved.
 **Delegated to agy:** None — this was direct, sudo-privileged execution
 per CLAUDE.md's rule that execution (including anything requiring elevated
 privileges) stays with Claude Code, not agy.
+
+## 2026-08-07 — session 14
+
+**Did:** Re-verified state fresh (7.2GB available RAM, load ~0.5-1.0, 324GB
+disk). Re-checked HF gated model access — still denied. Since the prior
+manuscript audit and Test 6 were already done, looked for a different
+unblocked step: the three hardware-agnostic Python components
+(`src/trigger_policy`, `src/dialogue_act`, `src/eval/benchmark_harness.py`)
+were only ever verified in the *original* sandboxed scaffold container
+(per `README.md`), never re-run on this actual dev machine. Ran all three:
+`pytest src/trigger_policy/test_policy.py` (6/6 passed), the dialogue-act
+classifier training script in its explicit demo/synthetic-data mode (100%
+test accuracy on trivial synthetic data — expected, not a meaningful real
+number, correctly labeled as such by the script itself), and
+`benchmark_harness.py --selftest` (mock-timing aggregation logic verified,
+explicitly labeled "NONE of the numbers above are real"). Mid-session, the
+user sent "download the model" — re-checked HF access immediately
+(`hf download facebook/layerskip-llama3.2-1B config.json`); still
+**Access denied. This repository requires approval.** — did not fabricate
+a download or pretend success; reported this honestly.
+
+**Found:** All three components work correctly on this real hardware, not
+just in the original sandbox — a legitimate re-verification, same spirit
+as re-verifying the llama.cpp build. `experiments/results/selftest_runs.jsonl`
+got 40 new lines appended from the benchmark harness run (clearly labeled
+mock data, consistent with the existing log format). The HF license still
+has not been accepted — access remains denied as of this session.
+
+**Passed/failed:** Not Go/No-Go rows — these are the safe-core scaffold's
+existing hardware-agnostic self-tests, now confirmed working on real
+hardware. All passed cleanly.
+
+**Next:** Still waiting on: HF license acceptance (checked again this
+session, still denied — user should verify they've actually completed the
+acceptance flow on huggingface.co, not just intended to), LDC access
+confirmation, and the Test 4 30-minute-run go-ahead.
+
+**Safety events:** None. All three scripts are lightweight (TF-IDF/sklearn,
+pytest, mock-timing aggregation) — no heavy compute, RAM stayed flat.
+
+**Delegated to agy:** None — direct execution of existing, already-written
+scripts, not content/code generation.
