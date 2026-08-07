@@ -1,0 +1,1772 @@
+____________________________________________________________________
+			P o w e r T O P
+
+____________________________________________________________________
+ *  *  *   System Information   *  *  *
+
+PowerTOP Version;2.15 ran at Fri Aug  7 11:34:46 2026
+
+Kernel Version;Linux version 7.0.0-28-generic
+System Name;Alienware01HV0T
+CPU Information;22 Intel(R) Core(TM) Ultra 7 155H
+OS Information;Ubuntu 24.04.4 LTS
+
+Target: 1 units/s;System:  4246.6 wakeup/s;CPU:  59.4% usage;GPU: 0 ops/s;GFX: 185.8 wakeups/s;VFS: 0 ops/s;
+
+____________________________________________________________________
+ *  *  *   Top 10 Power Consumers   *  *  *
+
+Usage;Events/s;Category;Description
+  1.2%;1837.3;Timer;tick_nohz_handler
+  0.7%;363.2;Timer;hrtimer_wakeup
+  1.4%;208.1;Interrupt;[7] sched(softirq)
+  2.6%;127.4;Interrupt;[183] nvidia
+  0.4%;101.4;Timer;apic_timer_fn
+  5.3%; 79.3;Process;[PID 1167377] claude --dangerously-skip-permissions 
+  8.2%; 55.7;Process;[PID 16702] /snap/code/254/usr/share/code/code --type=renderer --crashpad-handler-pid=16607 --enable-crash-reporter=2c7bbe16-aa
+  0.1%; 85.2;Process;[PID 32606] /opt/docker-desktop/bin/com.docker.backend services 
+  0.8%; 59.6;Process;[PID 32813] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  0.2%; 55.0;Process;[PID 862] [nvidia-modeset/]
+
+____________________________________________________________________
+ *  *  *   Processor Idle State Report   *  *  *
+
+Package;0
+C2 (pc2);  0.0%
+C3 (pc3);  0.0%
+C6 (pc6);  0.0%
+C7 (pc7);  0.0%
+C8 (pc8);  0.0%
+C9 (pc9);  0.0%
+C10 (pc10);  0.0%
+;
+;
+;
+;
+
+;Core 0
+C3 (cc3);  0.0%
+C6 (cc6); 39.2%
+C7 (cc7);  0.0%
+;Core 1
+C3 (cc3);  0.0%
+C6 (cc6); 44.2%
+C7 (cc7);  0.0%
+;Core 2
+C3 (cc3);  0.0%
+C6 (cc6); 52.9%
+C7 (cc7);  0.0%
+;Core 3
+C3 (cc3);  0.0%
+C6 (cc6); 49.1%
+C7 (cc7);  0.0%
+;Core 4
+C3 (cc3);  0.0%
+C6 (cc6); 60.4%
+C7 (cc7);  0.0%
+;Core 5
+C3 (cc3);  0.0%
+C6 (cc6); 25.3%
+C7 (cc7);  0.0%
+;Core 6
+C3 (cc3);  0.0%
+C6 (cc6); 46.8%
+C7 (cc7);  0.0%
+;Core 7
+C3 (cc3);  0.0%
+C6 (cc6); 65.1%
+C7 (cc7);  0.0%
+;Core 8
+C3 (cc3);  0.0%
+C6 (cc6);  1.3%
+C7 (cc7); 17.6%
+;Core 12
+C3 (cc3);  0.0%
+C6 (cc6);  1.0%
+C7 (cc7); 11.4%
+;Core 16
+C3 (cc3);  0.0%
+C6 (cc6);  0.2%
+C7 (cc7);  1.7%
+;Core 20
+C3 (cc3);  0.0%
+C6 (cc6);  1.7%
+C7 (cc7); 35.0%
+;Core 24
+C3 (cc3);  0.0%
+C6 (cc6);  1.5%
+C7 (cc7); 32.2%
+;Core 28
+C3 (cc3);  0.0%
+C6 (cc6);  1.9%
+C7 (cc7); 39.5%
+;Core 32
+C3 (cc3);  0.0%
+C6 (cc6); 96.1%
+C7 (cc7);  0.0%
+;Core 33
+C3 (cc3);  0.0%
+C6 (cc6); 96.3%
+C7 (cc7);  0.0%
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+
+CPU;12
+C0 active;  6.1%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6; 11.3%;   0.5 ms
+;
+;
+;
+C10; 74.0%;   2.0 ms
+C1E;  6.6%;   0.2 ms
+CPU;13
+C0 active;  5.1%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6; 11.6%;   0.6 ms
+;
+;
+;
+C10; 75.3%;   2.2 ms
+C1E;  6.2%;   0.2 ms
+CPU;14
+C0 active;  5.4%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6;  9.6%;   0.6 ms
+;
+;
+;
+C10; 78.2%;   2.4 ms
+C1E;  5.3%;   0.2 ms
+CPU;15
+C0 active;  4.8%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6; 10.1%;   0.6 ms
+;
+;
+;
+C10; 78.2%;   2.3 ms
+C1E;  5.6%;   0.2 ms
+CPU;16
+C0 active;  4.4%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6;  8.3%;   0.6 ms
+;
+;
+;
+C10; 81.4%;   2.9 ms
+C1E;  5.0%;   0.2 ms
+CPU;17
+C0 active;  6.4%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6; 11.8%;   0.5 ms
+;
+;
+;
+C10; 73.2%;   1.3 ms
+C1E;  6.7%;   0.2 ms
+CPU;18
+C0 active;  4.3%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6; 12.1%;   0.6 ms
+;
+;
+;
+C10; 77.2%;   2.2 ms
+C1E;  5.6%;   0.2 ms
+CPU;19
+C0 active;  4.2%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6;  8.3%;   0.6 ms
+;
+;
+;
+C10; 83.0%;   2.8 ms
+C1E;  3.7%;   0.2 ms
+CPU;1
+CPU;2;C0 active
+ 15.3%;  4.9%
+POLL;  0.0%
+   0.0 ms;  0.0%;   0.0 ms
+;
+
+C6; 14.0%
+   0.6 ms;  2.9%;   0.6 ms
+;
+
+;
+C10; 65.1%;   1.6 ms
+ 90.9%;   5.5 ms;C1E
+  6.9%;   0.2 ms;  2.0%
+   0.2 ms;
+CPU
+3;CPU;4
+C0 active; 12.5%;
+  6.7%;POLL
+  0.0%;   0.0 ms;  0.0%
+   0.0 ms;;
+;
+C6
+ 10.4%;   0.5 ms;  3.5%
+   0.7 ms;;
+;
+
+C10; 69.3%
+   1.7 ms; 89.5%;   5.0 ms
+C1E;  7.7%;   0.2 ms
+  1.7%;   0.1 ms;
+CPU;0;CPU
+5;C0 active;  7.4%
+  5.7%;
+POLL;  0.0%;   0.0 ms
+  0.0%;   0.0 ms;
+;
+C6; 18.8%;   0.6 ms
+ 10.2%;   0.6 ms;
+;
+;
+C10
+ 66.1%;   1.2 ms; 76.7%
+   1.8 ms;C1E;  7.5%
+   0.2 ms;  6.6%;   0.2 ms
+CPU;6
+CPU;7;C0 active
+  6.2%;  1.3%
+POLL;  0.0%
+   0.0 ms;  0.0%;   0.0 ms
+;
+
+C6;  9.0%
+   0.5 ms;  1.6%;   0.7 ms
+;
+
+;
+C10; 77.8%;   1.9 ms
+ 96.7%;  14.1 ms;C1E
+  5.9%;   0.2 ms;  0.6%
+   0.2 ms;
+CPU
+8;CPU;9
+C0 active;  6.1%;
+  1.9%;POLL
+  0.0%;   0.0 ms;  0.0%
+   0.0 ms;;
+;
+C6
+  9.8%;   0.6 ms;  2.0%
+   0.6 ms;;
+;
+
+C10; 76.9%
+   1.9 ms; 95.0%;   6.3 ms
+C1E;  6.2%;   0.2 ms
+  1.0%;   0.2 ms;
+CPU;10;CPU
+11;C0 active;  6.2%
+  0.6%;
+POLL;  0.0%;   0.0 ms
+  0.0%;   0.0 ms;
+;
+C6;  9.5%;   0.6 ms
+  2.0%;   0.8 ms;
+;
+;
+C10
+ 77.2%;   2.0 ms; 96.8%
+  20.5 ms;C1E;  6.0%
+   0.2 ms;  0.6%;   0.2 ms
+CPU;20
+C0 active;  1.2%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6;  0.4%;   0.4 ms
+;
+;
+;
+C10; 97.4%;  13.0 ms
+C1E;  0.3%;   0.2 ms
+CPU;21
+C0 active;  1.1%;
+POLL;  0.0%;   0.0 ms
+;
+;
+C6;  0.4%;   0.5 ms
+;
+;
+;
+C10; 97.6%;  17.5 ms
+C1E;  0.3%;   0.2 ms
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+;;
+
+____________________________________________________________________
+ *  *  *   Processor Frequency Report   *  *  *
+
+Package;0
+Idle;
+;
+;
+;
+
+;Core 0
+Idle;
+;Core 1
+Idle;
+;Core 2
+Idle;
+;Core 3
+Idle;
+;Core 4
+Idle;
+;Core 5
+Idle;
+;Core 6
+Idle;
+;Core 7
+Idle;
+;Core 8
+Idle;
+;Core 12
+Idle;
+;Core 16
+Idle;
+;Core 20
+Idle;
+;Core 24
+Idle;
+;Core 28
+Idle;
+;Core 32
+Idle;
+;Core 33
+Idle;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+
+CPU 12
+Average;2.2 GHz
+Idle;
+CPU 13
+Average;2.2 GHz
+Idle;
+CPU 14
+Average;2.3 GHz
+Idle;
+CPU 15
+Average;2.3 GHz
+Idle;
+CPU 16
+Average;2.4 GHz
+Idle;
+CPU 17
+Average;2.2 GHz
+Idle;
+CPU 18
+Average;2.4 GHz
+Idle;
+CPU 19
+Average;2.5 GHz
+Idle;
+CPU 1
+CPU 2;Average
+3.2 GHz;3.5 GHz
+Idle;
+CPU 3
+CPU 4;Average
+3.0 GHz;3.7 GHz
+Idle;
+CPU 0
+CPU 5;Average
+2.8 GHz;2.6 GHz
+Idle;
+CPU 6
+CPU 7;Average
+2.5 GHz;3.1 GHz
+Idle;
+CPU 8
+CPU 9;Average
+2.5 GHz;2.9 GHz
+Idle;
+CPU 10
+CPU 11;Average
+2.5 GHz;2.8 GHz
+Idle;
+CPU 20
+Average;1.8 GHz
+Idle;
+CPU 21
+Average;1.9 GHz
+Idle;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+
+____________________________________________________________________
+ *  *  *   Overview of Software Power Consumers   *  *  *
+
+Usage;Wakeups/s;GPU ops/s;Disk IO/s;GFX Wakeups/s;Category;Description
+ 12.4 ms/s;1837.3;;;;Timer;tick_nohz_handler
+  7.4 ms/s;363.2;;;;Timer;hrtimer_wakeup
+ 14.0 ms/s;208.1;;;;Interrupt;[7] sched(softirq)
+ 26.2 ms/s;127.4;;;;Interrupt;[183] nvidia
+  4.2 ms/s;101.4;;;;Timer;apic_timer_fn
+ 53.3 ms/s; 79.3;;;;Process;[PID 1167377] claude --dangerously-skip-permissions 
+ 82.4 ms/s; 55.7;;;;Process;[PID 16702] /snap/code/254/usr/share/code/code --type=renderer --crashpad-handler-pid=16607 --enable-crash-reporter=2c7bbe16-aa
+513.0 us/s; 85.2;;;;Process;[PID 32606] /opt/docker-desktop/bin/com.docker.backend services 
+  7.6 ms/s; 59.6;;;;Process;[PID 32813] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  1.7 ms/s; 55.0;;; 22.5;Process;[PID 862] [nvidia-modeset/]
+ 10.6 ms/s; 43.5;;; 35.6;Process;[PID 16720] /snap/code/254/usr/share/code/code --type=gpu-process --disable-gpu-sandbox --no-sandbox --ozone-platform=x11 --cra
+ 17.3 ms/s; 39.0;;; 35.5;Process;[PID 5121] /usr/bin/gnome-shell 
+ 64.4 ms/s; 27.8;;;;Process;[PID 1430] /usr/bin/nvidia-powerd 
+  2.3 ms/s; 51.0;;;;Process;[PID 1024114] /opt/OpenWhispr/open-whispr-app --type=zygote 
+ 37.1 ms/s; 33.4;;;;Process;[PID 16624] /snap/code/254/usr/share/code/code --type=gpu-process --disable-gpu-sandbox --no-sandbox --ozone-platform=x11 --cra
+298.0 us/s; 45.7;;;;kWork;flush_to_ldisc
+391.6 us/s; 34.9;;; 17.4;Process;[PID 16891] /snap/code/254/usr/share/code/code --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-
+ 10.7 ms/s; 34.9;;;;Process;[PID 32820] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  6.2 ms/s; 32.3;;;;Process;[PID 32821] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+192.9 us/s; 31.4;;;;Process;[PID 2878] /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock 
+  4.5 ms/s; 28.2;;;;Process;[PID 32824] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  4.3 ms/s; 27.9;;;;Process;[PID 32817] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  9.8 ms/s; 24.8;;;;Process;[PID 32823] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+ 11.3 ms/s; 20.7;;;;Process;[PID 32811] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  5.8 ms/s; 22.3;;;;Process;[PID 32831] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  4.0 ms/s; 21.9;;;;Process;[PID 32814] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+ 35.8 us/s; 13.1;;; 35.8;Process;[PID 1283] /usr/bin/nvidia-powerd 
+402.1 us/s; 21.9;;;;kWork;lru_add_drain_per_cpu
+  5.3 ms/s; 19.8;;;;Process;[PID 32825] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  4.5 ms/s; 19.7;;;;Process;[PID 32832] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  7.8 ms/s; 18.3;;;;Process;[PID 4853] /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -nolisten tcp -background none -noreset -kee
+  3.5 ms/s; 17.0;;;;Process;[PID 32828] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  7.3 ms/s;  8.3;;; 28.1;Process;[PID 15455] /usr/libexec/gnome-terminal-server 
+  6.9 ms/s; 15.3;;;;Process;[PID 32818] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  7.5 ms/s; 14.9;;;;Process;[PID 32830] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+117.1 us/s; 17.5;;;;Process;[PID 1958] /usr/bin/containerd 
+ 83.6 us/s; 16.9;;;;Timer;timerfd_tmrproc
+ 77.4 us/s; 16.3;;;;Process;[PID 2526957] runc
+320.5 us/s; 14.5;;;;Process;[PID 15] [rcu_preempt]
+  5.1 ms/s; 12.1;;;;Process;[PID 32816] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  5.8 ms/s; 11.5;;;;Process;[PID 32822] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  4.0 ms/s; 11.5;;;;Process;[PID 32807] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  4.5 ms/s; 11.2;;;;Process;[PID 32819] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  1.1 ms/s; 12.2;;;;Interrupt;[3] net_rx(softirq)
+605.4 us/s; 11.1;;;;Process;[PID 19177] codex --yolo 
+ 48.1 us/s; 10.8;;;;Process;[PID 14] [ksoftirqd/0]
+  6.0 ms/s;  7.8;;;;Process;[PID 32826] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  6.4 ms/s;  7.4;;;;Process;[PID 16870] /snap/code/254/usr/share/code/code --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-
+  3.0 ms/s;  8.6;;;;Process;[PID 32827] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+  5.6 ms/s;  7.4;;;;Process;[PID 32829] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+198.4 us/s;  9.0;;;;kWork;psi_avgs_work
+ 21.8 us/s;  8.5;;;;Timer;sched_cfs_period_timer
+201.9 us/s;  8.4;;;;kWork;delayed_vfree_work
+ 41.5 us/s;  8.4;;;;Process;[PID 2527021] runc:[2:INIT]
+ 41.7 us/s;  7.9;;;;Process;[PID 3412] /usr/bin/containerd-shim-runc-v2 -namespace moby -id 019e4a15c36b9b14a705231ec19991236f2cfdc55a8b3a77ee5ea62c8f27c5e
+635.1 us/s;  7.6;;;;Process;[PID 32646] /opt/docker-desktop/bin/com.docker.backend services 
+ 38.0 us/s;  7.8;;;;Process;[PID 2526987] runc:[2:INIT]
+ 22.8 us/s;  7.6;;;;Process;[PID 2527151] runc
+ 43.5 us/s;  7.5;;;;Process;[PID 2526975] runc:[2:INIT]
+  3.8 ms/s;  5.7;;;;Process;[PID 32812] /usr/bin/qemu-system-x86_64 -accel kvm -cpu host -machine q35 -m 3873 -smp 22 -kernel /opt/docker-desktop/linuxkit/
+ 60.4 us/s;  7.0;;;;Process;[PID 2527068] docker
+448.1 us/s;  3.9;;; 10.9;Process;[PID 4053] /usr/bin/containerd 
+ 21.8 us/s;  6.8;;;;Process;[PID 2527100] runc
+  1.8 ms/s;  6.0;;;;Process;[PID 167] [irq/9-acpi]
+ 54.8 us/s;  6.3;;;;Process;[PID 2527055] docker
+  2.8 ms/s;  5.2;;;;Process;[PID 1428] /usr/bin/nvidia-powerd 
+  0.7 ms/s;  5.7;;;;Process;[PID 335820] /home/parshu/projects/rag_agno/.venv/bin/python3 /home/parshu/projects/rag_agno/.venv/bin/rag-agno serve --host 12
+ 47.9 us/s;  5.8;;;;Process;[PID 2527009] runc
+361.8 us/s;  5.6;;;;Process;[PID 19179] codex --yolo 
+ 33.4 us/s;  5.6;;;;Process;[PID 2526968] runc
+ 42.8 us/s;  4.6;;;;Process;[PID 2527049] docker
+ 84.7 us/s;  4.4;;;;Process;[PID 32993] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 41.4 us/s;  4.3;;;;Timer;watchdog_timer_fn
+ 18.3 us/s;  4.3;;;;Process;[PID 116] [ksoftirqd/2]
+ 89.1 us/s;  4.2;;;;Process;[PID 1024355] /opt/OpenWhispr/resources/bin/qdrant-linux-x64 --config-path /home/parshu/.cache/openwhispr/qdrant-data/config.ya
+ 96.8 us/s;  4.1;;;;Process;[PID 32996] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 94.7 us/s;  4.1;;;;Process;[PID 33000] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 64.4 us/s;  4.0;;;;Process;[PID 32995] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 55.7 us/s;  4.0;;;;Process;[PID 33001] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+645.1 us/s;  3.7;;;;Process;[PID 3541] redis-server 0.0.0.0:6379                                                                                           
+ 81.9 us/s;  3.9;;;;Process;[PID 1235] /usr/bin/nvidia-powerd 
+ 57.1 us/s;  3.9;;;;Process;[PID 33005] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+  7.3 ms/s;  1.0;;;;Process;[PID 32887] /opt/docker-desktop/Docker Desktop --type=zygote 
+ 80.7 us/s;  3.8;;;;Process;[PID 33010] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 76.5 us/s;  3.8;;;;Process;[PID 33006] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 69.0 us/s;  3.8;;;;Process;[PID 32997] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 44.3 us/s;  3.7;;;;Process;[PID 32991] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+454.9 us/s;  3.5;;;;Process;[PID 4052] /usr/bin/containerd 
+ 88.1 us/s;  3.6;;;;Process;[PID 32992] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 85.1 us/s;  3.6;;;;Process;[PID 33008] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 56.4 us/s;  3.6;;;;Process;[PID 33009] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 49.5 us/s;  3.6;;;;Process;[PID 33011] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+  3.0 ms/s;  2.4;;;;Process;[PID 16719] /snap/code/254/usr/share/code/code --type=gpu-process --disable-gpu-sandbox --no-sandbox --ozone-platform=x11 --cra
+ 65.6 us/s;  3.5;;;;Process;[PID 32994] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 77.7 us/s;  3.4;;;;Process;[PID 33007] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 50.1 us/s;  3.4;;;;Process;[PID 33012] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+554.2 us/s;  3.1;;;;Process;[PID 3539] redis-server 0.0.0.0:6379                                                                                           
+ 19.3 us/s;  3.3;;;;Process;[PID 3402] /usr/bin/containerd-shim-runc-v2 -namespace moby -id 89bde3b6c98af53a14db80ffdaeb04f2dd0ba584e4f13aa52155b402d4f2a79
+ 65.7 us/s;  3.2;;;;Process;[PID 33002] /opt/docker-desktop/Docker Desktop --type=zygote --no-zygote-sandbox 
+ 51.4 us/s;  3.2;;;;Process;[PID 32588] /opt/docker-desktop/bin/com.docker.backend 
+
+____________________________________________________________________
+ *  *  *   Device Power Report   *  *  *
+
+Usage;Device Name
+ 59.5%;CPU misc
+ 59.5%;CPU core
+ 51.0%;Display backlight
+100.0%;PCI Device: Intel Corporation Device 7e3f
+100.0%;Radio device: btusb
+100.0%;Radio device: iwlwifi
+100.0%;PCI Device: KIOXIA Corporation NVMe SSD Controller BG6 (DRAM-less)
+100.0%;USB device: Keyboard (DELL Technologies)
+100.0%;PCI Device: Intel Corporation Device 7d0d
+100.0%;PCI Device: Intel Corporation Device 7e7f
+100.0%;USB device: AW-ELC (Alienware)
+100.0%;PCI Device: Intel Corporation Meteor Lake-P USB 3.2 Gen 2x1 xHCI Host Controller
+100.0%;PCI Device: Intel Corporation Device 7e3e
+100.0%;USB device: xHCI Host Controller
+100.0%;PCI Device: Intel Corporation Device 7d01
+100.0%;PCI Device: Intel Corporation Device 7ecc
+100.0%;PCI Device: Intel Corporation Device 7e02
+100.0%;PCI Device: Intel Corporation Wi-Fi 7(802.11be) AX1775*/AX1790*/BE20*/BE401/BE1750* 2x2
+100.0%;PCI Device: Intel Corporation Device 7d03
+100.0%;PCI Device: Intel Corporation Device 7e4c
+100.0%;PCI Device: Intel Corporation Device 7e38
+100.0%;PCI Device: Realtek Semiconductor Co., Ltd. Killer E3000 2.5GbE Controller
+100.0%;PCI Device: NVIDIA Corporation AD106M [GeForce RTX 4070 Max-Q / Mobile]
+100.0%;PCI Device: Intel Corporation Meteor Lake-P SPI Controller
+100.0%;PCI Device: Intel Corporation Device 7e45
+ 92.7%;PCI Device: Intel Corporation Meteor Lake-P [Intel Arc Graphics]
+  9.0 pkts/s;Network interface: wlp47s0f0 (iwlwifi)
+  6.0 pkts/s;nic:vethffcd36a
+  2.0 pkts/s;nic:veth374625b
+  2.0 pkts/s;nic:veth039eb50
+  2.0 pkts/s;nic:veth4a4ff2f
+  0.0 pkts/s;nic:br-7c9754f988d2
+  0.0%;USB device: Integrated_Webcam_FHD (CN0768YG8LG00497D36BA00)
+  0.0%;USB device: xHCI Host Controller
+  0.0%;USB device: usb-device-8087-0038
+  0.0%;USB device: xHCI Host Controller
+  0.0%;Audio codec hwC1D0: Realtek
+  0.0%;Audio codec hwC0D0: Nvidia
+  0.0%;Audio codec hwC1D2: Intel
+  0.0 pkts/s;nic:br-39d9d75c5e15
+  0.0 pkts/s;nic:br-5a707e80bbd2
+  0.0 pkts/s;nic:veth73c106f
+  0.0 pkts/s;nic:veth98d54ee
+  0.0 pkts/s;nic:docker0
+  0.0%;PCI Device: NVIDIA Corporation Device 22bd
+  0.0%;PCI Device: Intel Corporation Meteor Lake NPU
+  0.0 pkts/s;nic:veth0dfb740
+  0.0 pkts/s;nic:veth16aa99b
+  0.0 pkts/s;nic:br-1e376ebeaeaa
+  0.0 pkts/s;nic:tailscale0
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P Thunderbolt 4 USB Controller
+  0.0%;PCI Device: Intel Corporation Device 7e70
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #2
+  0.0%;PCI Device: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P Thunderbolt 4 NHI #1
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P HD Audio Controller
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P Serial IO I2C Controller #2
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P Serial IO I2C Controller #0
+  0.0%;PCI Device: Intel Corporation Device 7e3c
+  0.0%;runtime-PNP0C0A:00
+  0.0%;PCI Device: Intel Corporation Meteor Lake-P SMBus Controller
+  0.0%;runtime-spi0.0
+  0.0%;runtime-spi0.1
+  0.0%;runtime-INTC1062:07
+  0.0%;runtime-i2c_designware.1
+  0.0%;runtime-PNP0C14:00
+  0.0%;runtime-alarmtimer.0.auto
+  0.0%;runtime-INTC1083:00
+  0.0%;runtime-rtsx_pci_sdmmc.0
+  0.0%;runtime-iTCO_wdt
+  0.0%;runtime-PNP0C0D:00
+  0.0%;runtime-PNP0C14:05
+  0.0%;runtime-INTC1078:00
+  0.0%;USB device: xHCI Host Controller
+  0.0%;runtime-PNP0C14:09
+  0.0%;runtime-kgdboc
+  0.0%;runtime-skl_hda_dsp_generic
+  0.0%;runtime-INTC1062:05
+  0.0%;runtime-ACPI0003:00
+  0.0%;runtime-acpi-cpufreq
+  0.0%;runtime-INT33A1:00
+  0.0%;runtime-PNP0C14:07
+  0.0%;runtime-dcdbas
+  0.0%;runtime-HID-SENSOR-2000e1.3.auto
+  0.0%;runtime-INTC1062:03
+  0.0%;runtime-INTC109D:00
+  0.0%;runtime-PNP0C09:00
+  0.0%;runtime-INTC1042:00
+  0.0%;runtime-PNP0C14:08
+  0.0%;runtime-dmic-codec
+  0.0%;runtime-i2c_designware.0
+  0.0%;runtime-INTC1062:06
+  0.0%;runtime-INT340E:00
+  0.0%;runtime-PNP0C14:01
+  0.0%;runtime-rtc-efi.0
+  0.0%;runtime-ACPI000C:00
+  0.0%;runtime-coretemp.0
+  0.0%;runtime-PNP0C0C:00
+  0.0%;runtime-PNP0C14:0a
+  0.0%;runtime-PNP0C14:03
+  0.0%;runtime-USBC000:00
+  0.0%;runtime-HID-SENSOR-2000e1.2.auto
+  0.0%;I2C Adapter (i2c-17): AUX USBC4/DDI TC4/PHY TC4
+  0.0%;runtime-intel_rapl_msr.0
+  0.0%;runtime-INTC7001:00
+  0.0%;I2C Adapter (i2c-12): NVIDIA i2c adapter 1 at 1:00.0
+  0.0%;runtime-idma64.1
+  0.0%;runtime-PNP0103:00
+  0.0%;runtime-PNP0C14:06
+  0.0%;runtime-dell-smbios.0
+  0.0%;runtime-ACPI000E:00
+  0.0%;runtime-PNP0C0E:00
+  0.0%;runtime-INTC1062:02
+  0.0%;runtime-INTC1062:04
+  0.0%;runtime-INTC1062:01
+  0.0%;runtime-ABCD0000:00
+  0.0%;I2C Adapter (i2c-8): i915 gmbus tc1
+  0.0%;runtime-serial8250
+  0.0%;runtime-PNP0C14:04
+  0.0%;runtime-INTC1062:00
+  0.0%;runtime-i8042
+  0.0%;runtime-DELL0033:00
+  0.0%;runtime-NVDA0820:00
+  0.0%;runtime-PNP0C14:02
+  0.0%;runtime-pcspkr
+  0.0%;runtime-HID-SENSOR-200001.1.auto
+  0.0%;runtime-idma64.0
+  0.0%;I2C Adapter (i2c-3): i915 gmbus dpa
+  0.0%;I2C Adapter (i2c-10): i915 gmbus tc3
+  0.0%;I2C Adapter (i2c-1): Synopsys DesignWare I2C adapter
+  0.0%;runtime-efivars.0
+  0.0 pkts/s;Network interface: enp46s0 (r8169)
+  0.0%;I2C Adapter (i2c-15): NVIDIA i2c adapter 6 at 1:00.0
+  0.0%;I2C Adapter (i2c-6): i915 gmbus dpd
+  0.0%;I2C Adapter (i2c-13): NVIDIA i2c adapter 3 at 1:00.0
+  0.0%;I2C Adapter (i2c-4): i915 gmbus dpb
+  0.0%;I2C Adapter (i2c-11): i915 gmbus tc4
+  0.0%;I2C Adapter (i2c-2): SMBus I801 adapter at 0000:00:1f.4
+  0.0%;I2C Adapter (i2c-0): Synopsys DesignWare I2C adapter
+  0.0%;I2C Adapter (i2c-9): i915 gmbus tc2
+  0.0%;I2C Adapter (i2c-16): AUX USBC3/DDI TC3/PHY TC3
+  0.0%;I2C Adapter (i2c-7): i915 gmbus dpe
+  0.0%;I2C Device (i2c-VEN_06CB:00): VEN_06CB:00
+  0.0%;I2C Adapter (i2c-14): NVIDIA i2c adapter 5 at 1:00.0
+  0.0%;I2C Adapter (i2c-5): i915 gmbus dpc
+____________________________________________________________________
+ *  *  *   Process Device Activity   *  *  *
+
+Process;Device
+systemd;/dev/autofs
+;/dev/dri/card2
+;/dev/dri/card2
+;/dev/kmsg
+;/dev/rfkill
+systemd-journal;/dev/kmsg
+;/dev/kmsg
+acpid;/dev/input/event0
+;/dev/input/event1
+;/dev/input/event10
+;/dev/input/event11
+;/dev/input/event12
+;/dev/input/event13
+;/dev/input/event14
+;/dev/input/event15
+;/dev/input/event16
+;/dev/input/event17
+;/dev/input/event18
+;/dev/input/event19
+;/dev/input/event2
+;/dev/input/event20
+;/dev/input/event21
+;/dev/input/event3
+;/dev/input/event7
+;/dev/input/event8
+;/dev/input/event9
+bluetoothd;/dev/rfkill
+nvidia-powerd;/dev/cpu/0/msr
+;/dev/cpu/0/msr
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+systemd-logind;/dev/dri/card2
+;/dev/dri/card2
+;/dev/input/event0
+;/dev/input/event1
+;/dev/input/event1
+;/dev/input/event1
+;/dev/input/event10
+;/dev/input/event10
+;/dev/input/event11
+;/dev/input/event11
+;/dev/input/event16
+;/dev/input/event16
+;/dev/input/event17
+;/dev/input/event17
+;/dev/input/event2
+;/dev/input/event2
+;/dev/input/event2
+;/dev/input/event3
+;/dev/input/event3
+;/dev/input/event3
+;/dev/input/event4
+;/dev/input/event4
+;/dev/input/event5
+;/dev/input/event5
+;/dev/input/event6
+;/dev/input/event6
+;/dev/input/event7
+;/dev/input/event7
+;/dev/input/event7
+;/dev/input/event8
+;/dev/input/event8
+;/dev/input/event8
+;/dev/input/event9
+;/dev/input/event9
+;/dev/input/event9
+thermald;/dev/input/event0
+wpa_supplicant;/dev/rfkill
+;/dev/rfkill
+upowerd;/dev/input/event0
+tailscaled;/dev/net/tun
+pipewire;/dev/snd/seq
+;/dev/snd/seq
+Xorg;/dev/dri/card2
+;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+xdg-document-po;/dev/fuse
+gnome-shell;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+mutter-x11-fram;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+gsd-rfkill;/dev/rfkill
+pipewire;/dev/snd/controlC1
+;/dev/snd/seq
+;/dev/snd/seq
+wireplumber;/dev/snd/controlC0
+;/dev/snd/controlC1
+;/dev/snd/controlC1
+;/dev/snd/controlC1
+xdg-document-po;/dev/fuse
+Xorg;/dev/dri/card1
+;/dev/dri/card2
+;/dev/dri/card2
+;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/input/event1
+;/dev/input/event10
+;/dev/input/event11
+;/dev/input/event16
+;/dev/input/event17
+;/dev/input/event2
+;/dev/input/event3
+;/dev/input/event4
+;/dev/input/event5
+;/dev/input/event6
+;/dev/input/event7
+;/dev/input/event8
+;/dev/input/event9
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+gvfsd-fuse;/dev/fuse
+gnome-shell;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+mutter-x11-fram;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+gsd-rfkill;/dev/rfkill
+;/dev/rfkill
+gnome-software;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+xdg-desktop-por;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+snapd-desktop-i;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+code;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/dri/renderD129
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+qemu-system-x86;/dev/kvm
+Docker Desktop;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/dri/renderD129
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/dri/renderD129
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+gnome-calendar;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+chrome;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+open-whispr-app;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/dri/renderD129
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/dri/renderD129
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+nautilus;/dev/dri/renderD128
+;/dev/dri/renderD128
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia-modeset
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidia0
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+;/dev/nvidiactl
+
+____________________________________________________________________
+ *  *  *   AHCI ALPM Residency Statistics - Not supported on this macine   *  *  *
+
+____________________________________________________________________
+ *  *  *   Software Settings in Need of Tuning   *  *  *
+
+Description;Script
+VM writeback timeout;echo '1500' > '/proc/sys/vm/dirty_writeback_centisecs';
+NMI watchdog should be turned off;echo '0' > '/proc/sys/kernel/nmi_watchdog';
+Autosuspend for USB device Keyboard [DELL Technologies];echo 'auto' > '/sys/bus/usb/devices/3-8/power/control';
+Autosuspend for USB device AW-ELC [Alienware];echo 'auto' > '/sys/bus/usb/devices/3-7/power/control';
+Runtime PM for PCI Device Realtek Semiconductor Co., Ltd. Killer E3000 2.5GbE Controller;echo 'auto' > '/sys/bus/pci/devices/0000:2e:00.0/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7d03;echo 'auto' > '/sys/bus/pci/devices/0000:00:04.0/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7e02;echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.0/power/control';
+Runtime PM for PCI Device Intel Corporation Wi-Fi 7(802.11be) AX1775*/AX1790*/BE20*/BE401/BE1750* 2x2;echo 'auto' > '/sys/bus/pci/devices/0000:2f:00.0/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7e4c;echo 'auto' > '/sys/bus/pci/devices/0000:00:08.0/power/control';
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P SPI Controller;echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.5/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7d01;echo 'auto' > '/sys/bus/pci/devices/0000:00:00.0/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7e45;echo 'auto' > '/sys/bus/pci/devices/0000:00:12.0/power/control';
+Runtime PM for PCI Device KIOXIA Corporation NVMe SSD Controller BG6 (DRAM-less);echo 'auto' > '/sys/bus/pci/devices/0000:2c:00.0/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7d0d;echo 'auto' > '/sys/bus/pci/devices/0000:00:0a.0/power/control';
+Runtime PM for PCI Device Intel Corporation Device 7e7f;echo 'auto' > '/sys/bus/pci/devices/0000:00:14.2/power/control';
+____________________________________________________________________
+ *  *  *   Untunable Software Issues   *  *  *
+
+Description
+I2C Adapter i2c-3 has no runtime power management
+I2C Adapter i2c-10 has no runtime power management
+I2C Adapter i2c-1 has no runtime power management
+I2C Adapter i2c-17 has no runtime power management
+I2C Adapter i2c-8 has no runtime power management
+I2C Adapter i2c-15 has no runtime power management
+I2C Adapter i2c-6 has no runtime power management
+I2C Adapter i2c-13 has no runtime power management
+I2C Adapter i2c-4 has no runtime power management
+I2C Adapter i2c-11 has no runtime power management
+I2C Adapter i2c-2 has no runtime power management
+I2C Adapter i2c-0 has no runtime power management
+I2C Adapter i2c-9 has no runtime power management
+I2C Adapter i2c-16 has no runtime power management
+I2C Adapter i2c-7 has no runtime power management
+I2C Device i2c-VEN_06CB:00 has no runtime power management
+I2C Adapter i2c-14 has no runtime power management
+I2C Adapter i2c-5 has no runtime power management
+I2C Adapter i2c-12 has no runtime power management
+____________________________________________________________________
+ *  *  *   Optimal Tuned Software Settings   *  *  *
+
+Description
+Enable Audio codec power management
+Bluetooth device interface status
+Autosuspend for USB device xHCI Host Controller [usb2]
+Autosuspend for USB device xHCI Host Controller [usb3]
+Autosuspend for USB device xHCI Host Controller [usb4]
+Autosuspend for USB device xHCI Host Controller [usb1]
+Autosuspend for unknown USB device 3-10 (8087:0038)
+Autosuspend for USB device Integrated_Webcam_FHD [CN0768YG8LG00497D36BA00]
+Runtime PM for PCI Device Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P Thunderbolt 4 NHI #1
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P HD Audio Controller
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P Serial IO I2C Controller #2
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #2
+Runtime PM for PCI Device Intel Corporation Device 7e3f
+Runtime PM for PCI Device NVIDIA Corporation AD106M [GeForce RTX 4070 Max-Q / Mobile]
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P Serial IO I2C Controller #0
+Runtime PM for PCI Device Intel Corporation Device 7e38
+Runtime PM for PCI Device Intel Corporation Device 7e3e
+Runtime PM for PCI Device NVIDIA Corporation Device 22bd
+Runtime PM for PCI Device Intel Corporation Device 7e70
+Runtime PM for PCI Device Intel Corporation Device 7e3c
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P [Intel Arc Graphics]
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P Thunderbolt 4 USB Controller
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P USB 3.2 Gen 2x1 xHCI Host Controller
+Runtime PM for PCI Device Intel Corporation Meteor Lake-P SMBus Controller
+Runtime PM for PCI Device Intel Corporation Device 7ecc
+Runtime PM for PCI Device Intel Corporation Meteor Lake NPU
+
+____________________________________________________________________
+ *  *  *   Wake status of the devices   *  *  *
+
+Description;Script
+Wake-on-lan status for device wlp47s0f0;echo 'enabled' > '/sys/class/net/wlp47s0f0/device/power/wakeup';
+Wake-on-lan status for device enp46s0;echo 'enabled' > '/sys/class/net/enp46s0/device/power/wakeup';
+Wake status for USB device usb3;echo 'enabled' > '/sys/bus/usb/devices/usb3/power/wakeup';
+Wake status for USB device usb1;echo 'enabled' > '/sys/bus/usb/devices/usb1/power/wakeup';
+Wake status for USB device usb4;echo 'enabled' > '/sys/bus/usb/devices/usb4/power/wakeup';
+Wake status for USB device 3-7;echo 'enabled' > '/sys/bus/usb/devices/3-7/power/wakeup';
+Wake status for USB device 3-10;echo 'enabled' > '/sys/bus/usb/devices/3-10/power/wakeup';
+Wake status for USB device usb2;echo 'enabled' > '/sys/bus/usb/devices/usb2/power/wakeup';

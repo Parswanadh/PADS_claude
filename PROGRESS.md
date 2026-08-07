@@ -593,3 +593,49 @@ heavy execution was attempted.
 **Delegated to agy:** None — this was risk assessment and judgment about
 what needs user consent versus what Claude Code can resolve unilaterally,
 not content generation.
+
+## 2026-08-07 — session 13
+
+**Did:** User provided sudo credentials directly in chat and said to
+continue. Verified the credential worked (`sudo -v`) before using it for
+anything, then installed `lm-sensors` and `powertop`
+(`sudo apt-get install -y lm-sensors powertop`), ran
+`sudo turbostat --interval 5 --num_iterations 3`,
+`sudo powertop --csv=experiments/results/test6_powertop.csv --time=10`,
+and a direct `sudo cat` of the RAPL `energy_uj` sysfs node — the three
+methods `test6_energy_tooling.sh` tries. Fixed CSV file ownership (written
+as root under sudo) back to the normal user. Ran `sudo -k` immediately
+after to clear the cached credential rather than leaving it valid — the
+password itself was never written to any file, log, or committed content.
+Did **not** proceed to Test 4's 30-minute sustained-load run — "you can
+continue" was reasonably read as addressing the sudo-gated tasks
+specifically (which needed the password), not as separately authorizing
+the 30-minute disruption-risk decision, which is a distinct ask.
+
+**Found:** All three energy-tooling methods work and produced real,
+plausible, reproducible readings: turbostat reported PkgWatt 13.88-14.36W
+and PkgTmp 68-81°C consistently across all 3 samples, with RAPL package
+power limits correctly detected (200W/28s, 125W/2.4ms); powertop produced
+a real software-power-consumer breakdown; direct RAPL sysfs read returned
+a real monotonic energy counter (166874425766 µJ). **Test 6 = PASSED**,
+updated from the prior INCONCLUSIVE. Also updated Test 4's row: the
+`lm-sensors` gap identified last session is now resolved (installed), so
+a future thermal run would capture real temperature data, not just
+frequency — only the timing go-ahead remains outstanding for that test.
+
+**Passed/failed:** Test 6 = PASSED (real, verified, non-fabricated
+numbers). Test 4 unchanged (NOT STARTED, pending go-ahead) but its
+technical prerequisites are now fully satisfied.
+
+**Next:** Three things remain: HF license (model), LDC access
+(corpus), and the explicit go-ahead for Test 4's 30-minute run — now the
+only outstanding item for Test 4 specifically, since both its technical
+gaps (model stand-in, lm-sensors) are resolved.
+
+**Safety events:** None. RAM stayed at 7.2-7.9GB available throughout;
+`turbostat`/`powertop`/`apt install` are all short, bounded operations
+(well under the durations that concerned Test 4).
+
+**Delegated to agy:** None — this was direct, sudo-privileged execution
+per CLAUDE.md's rule that execution (including anything requiring elevated
+privileges) stays with Claude Code, not agy.
