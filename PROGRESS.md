@@ -429,3 +429,54 @@ the compile in any meaningful way.
 **Delegated to agy:** None — this was direct LaTeX editing and citation
 verification (checking real author names against the source), not content
 generation.
+
+## 2026-08-07 — session 10
+
+**Did:** Re-verified state fresh (system stable: 7.6GB available RAM, load
+0.42, 324GB disk). Re-checked HF gated model access — still denied. Per the
+note, did a targeted audit (not exhaustive) comparing
+`docs/06_Literature_Survey.md` section B against
+`paper/PADS_manuscript.tex`'s Related Work. Spotted something worth
+checking: the manuscript describes `\cite{xu2025specee}` (SpecEE) as
+"input-adaptive layer sparsity," but that phrase is actually SWIFT's
+description in the literature survey (B3), not SpecEE's. Verified rather
+than assumed: searched for SpecEE's actual technique (a speculative model
+narrows the early-exit predictor's search space, plus a two-level heuristic
+predictor-scheduling engine) and confirmed it does NOT match "input-adaptive
+layer sparsity." Then verified SWIFT's real technique and citation details
+(Xia, Li, Zhang, Du, Li, "SWIFT: On-the-Fly Self-Speculative Decoding for
+LLM Inference Acceleration," ICLR 2025, arXiv:2410.06916) directly from
+arXiv rather than guessing author names.
+
+**Found:** A genuine, fixable inaccuracy: the manuscript had mischaracterized
+SpecEE's contribution using SWIFT's actual technique description. This
+matters because it's the kind of error a reviewer familiar with either
+paper would catch. Fixed by adding a real `xia2025swift` citation for the
+"input-adaptive layer sparsity" clause and giving `xu2025specee` its own
+accurate description ("speculative-model-narrowed early-exit predictor
+search"), rather than just silently dropping SpecEE. This is also net new
+coverage: SWIFT (B3 in the literature survey) was previously uncited in the
+manuscript at all. Recompiled 3 passes with `pdflatex`: zero warnings/errors
+on passes 2-3, still 5 pages. RAM stayed flat (7.5-7.6GB available)
+throughout.
+
+**Passed/failed:** Not a Go/No-Go row — manuscript accuracy maintenance.
+Compile: PASSED, zero warnings. This was a genuinely useful fix, not
+busywork: it corrects a real misattribution rather than just padding
+citation count.
+
+**Next:** The full A-F literature-survey-vs-manuscript cross-check is not
+complete — only B was checked closely this session (and only one clause
+within B triggered a deeper look; C/D/E/F and the remainder of A/B were not
+audited). A future session could continue that audit, but should stay
+alert for the same failure mode (citation key present but description
+describing a different, related paper) rather than just checking presence/
+absence. Still waiting on the three human actions (HF license, LDC
+question, sudo for Test 6) to unblock the Go/No-Go tests themselves.
+
+**Safety events:** None. `pdflatex` compiles are lightweight; RAM/disk
+untouched meaningfully.
+
+**Delegated to agy:** None — this required judgment about whether a
+citation's description accurately represents the cited work, verified
+against real sources, not content generation.
