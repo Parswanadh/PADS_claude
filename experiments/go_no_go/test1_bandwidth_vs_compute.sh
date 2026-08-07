@@ -27,9 +27,14 @@ echo "threads,tokens_per_sec" > "$OUT"
 
 for T in 1 2 3 4 5 6 7 8; do
   echo "== threads=$T =="
-  # llama-cli prints a timing summary to stderr; we grep the eval rate line.
-  RESULT=$("$LLAMA_CLI" -m "$MODEL_PATH" -p "$PROMPT" -n 128 -t "$T" 2>&1 | tee /dev/stderr)
-  TPS=$(echo "$RESULT" | grep -oP 'eval time.*?\K[0-9.]+(?= tokens per second)' | tail -1 || echo "NA")
+  # -st (single-turn) + stdin from /dev/null: this llama.cpp build
+  # auto-enables interactive conversation mode for chat-template models,
+  # which otherwise hangs waiting on stdin after generating -- see
+  # experiments/results/llamacpp_inference_smoke_test.md.
+  # Perf summary line format on this build: "[ Prompt: X t/s | Generation: Y t/s ]"
+  # (not the older "eval time ... tokens per second" format).
+  RESULT=$(timeout 60 "$LLAMA_CLI" -m "$MODEL_PATH" -p "$PROMPT" -n 128 -t "$T" -st < /dev/null 2>&1 | tee /dev/stderr)
+  TPS=$(echo "$RESULT" | grep -oP 'Generation:\s*\K[0-9.]+(?=\s*t/s)' | tail -1 || echo "NA")
   echo "$T,$TPS" >> "$OUT"
 done
 

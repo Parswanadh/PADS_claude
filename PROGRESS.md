@@ -816,3 +816,46 @@ exactly as CLAUDE.md prescribes.
 
 **Delegated to agy:** None — all execution (download, conversion,
 quantization, inference) stayed with Claude Code per CLAUDE.md's rule.
+
+## 2026-08-07 — session 18 — GO/NO-GO TEST 1: FAILED (bandwidth-bound), as pre-registered
+
+**Did:** With the real checkpoint in place, moved to Go/No-Go Test 1
+(bandwidth-vs-compute). Before running, checked whether
+`test1_bandwidth_vs_compute.sh` would actually work against this
+llama.cpp build rather than assuming — found and fixed two real bugs: (1)
+the script's `llama-cli` invocation had no `-st` flag or stdin redirect,
+so it would have hung exactly like the session 11 smoke-test's first
+attempt (this build auto-enters interactive conversation mode for
+chat-template models); (2) its regex parsed an older CLI output format
+("eval time ... tokens per second") that doesn't exist in this build
+(actual format: `[ Prompt: X t/s | Generation: Y t/s ]`) — it would have
+silently written "NA" for every thread count, a dangerous kind of failure
+since the script would have appeared to run successfully. Fixed both in
+the script itself (committed, not a one-off workaround), verified the
+regex against a real sample line, then ran the full 1-8 thread sweep.
+
+**Found:** Real data: 1 thread 16.7 tok/s, scaling to 43.5 at 4 threads,
+then flatlining at 47.2/48.7/49.3/49.1 for 5-8 threads. This is exactly
+the test's own kill signal. Checked `docs/01_HNIA_PADS_Detailed_Report.md`
+§5-6 for the pre-committed interpretation rather than improvising one:
+the mitigation for this exact outcome is "reframe as a legitimate
+characterization result... shrink the reasoning model to test whether a
+smaller model shifts the regime back toward compute-bound." We're already
+using a 1B model (smaller than the report's suggested 3B fallback) and
+it's still clearly bandwidth-bound — a robust, not marginal, confirmation.
+
+**Passed/failed:** **Test 1 = FAILED (bandwidth-bound), exactly as
+pre-registered in the project's own risk analysis.** This is the expected,
+anticipated finding that motivates PADS's whole premise, not a project
+failure — logged per the report's own framing, not spun after the fact.
+
+**Next:** Go/No-Go Test 3 (self-speculative acceptance rate) — needs
+checking whether this llama.cpp build supports
+`--generation_strategy self_speculative` or whether the actual LayerSkip
+Python codebase is needed for that specific measurement.
+
+**Safety events:** None. RAM 7.3-7.4GB available throughout the sweep,
+each run wrapped in `timeout 60`, all 8 runs completed well within budget.
+
+**Delegated to agy:** None — script debugging and test execution stayed
+with Claude Code.
