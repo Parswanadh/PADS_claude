@@ -335,3 +335,46 @@ and local file writes — no heavy compute.
 
 **Delegated to agy:** None — this was literature verification requiring
 judgment about source reliability, not content generation.
+
+## 2026-08-07 — session 8
+
+**Did:** Re-verified state fresh (system stable: 7.5GB available RAM, load
+0.77, 324GB disk). Re-checked HF gated model access — still denied, no
+change. Per the note left for this session, moved to Test 6 (energy
+tooling), which doesn't need a model. Checked each of the three methods the
+test script tries: confirmed via `sudo -n true` (non-interactive check,
+didn't attempt an actual privileged command) that passwordless sudo isn't
+available on this account — `turbostat` is installed but needs sudo,
+`powertop` isn't installed at all (also needs sudo to install), and RAPL
+sysfs nodes exist but `energy_uj` is root-only (permission denied for
+non-root reads). Did not attempt to guess a password, escalate privileges,
+or work around the permission block in any way.
+
+**Found:** None of the three energy-measurement methods are usable
+*in this automated session* — but this is a privilege/access blocker, not
+necessarily a real finding about whether the hardware/BIOS/kernel supports
+RAPL at all (the RAPL sysfs nodes existing suggests it does, just gated to
+root). Logged as **INCONCLUSIVE**, explicitly not the real PASS/FAIL the
+test's own decision rule expects, since that rule assumes the tools were
+actually invoked with sufficient privilege.
+
+**Passed/failed:** Test 6 = INCONCLUSIVE, blocked on needing interactive
+sudo. Did not fabricate a PASS or force a FAILED-therefore-pivot verdict
+that the actual hardware capability doesn't support yet.
+
+**Next:** Needs a human to either (a) run
+`sudo turbostat --interval 5 --num_iterations 3` and
+`sudo powertop --csv=experiments/results/test6_powertop.csv --time=10`
+interactively once (their password, not scriptable by Claude Code), or (b)
+set up a persistent non-root read capability for RAPL (e.g., a udev rule)
+if repeated automated runs are wanted later. Three things now need human
+action: HF license acceptance (model), LDC access question (corpus), and
+this sudo run (energy tooling) — worth batching into one ask to the user
+rather than repeating across sessions.
+
+**Safety events:** None. No privileged commands were attempted; checking
+`sudo -n true` and reading sysfs permissions are both non-invasive,
+read-only checks.
+
+**Delegated to agy:** None — this was direct system inspection (checking
+sudo/tool availability and file permissions), not content generation.
