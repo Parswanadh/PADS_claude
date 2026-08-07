@@ -378,3 +378,54 @@ read-only checks.
 
 **Delegated to agy:** None — this was direct system inspection (checking
 sudo/tool availability and file permissions), not content generation.
+
+## 2026-08-07 — session 9
+
+**Did:** Re-verified state fresh (system stable: 7.6GB available RAM, load
+0.63, 324GB disk). Re-checked HF gated model access — still denied. Per the
+note left for this session, did not re-research the same three blockers
+again. Instead checked whether `paper/PADS_manuscript.tex`'s Related Work
+section already incorporated the H.4 literature-survey finding from
+session 3 ("Thinking While Speaking," arXiv:2511.07397). It did not — grep
+confirmed the two H.3 systems (Venkatesha et al., Ok/Yoo/Lee) were already
+cited and differentiated, but the newer H.4 paper was missing entirely.
+Verified the paper's actual author names directly from arXiv (Vidya
+Srinivas, Zachary Englhardt, Vikram Iyer, Shwetak Patel) rather than
+guessing them for the citation. Added a third differentiation paragraph
+alongside the existing two (renamed the subsection "two closest prior
+systems" -> "three"), plus a properly formatted `\bibitem`. Along the way,
+also checked whether the existing `heldner2010pauses` citation (line 40,
+supporting the "200-500ms typical pause" claim) was being misused given
+what session 7 learned about that paper not covering Switchboard/CallHome
+— it wasn't: the manuscript's claim is a general one about human
+turn-taking pause ranges, not a Switchboard-specific claim, and Heldner &
+Edlund's own mode-~200ms finding across their three corpora supports it
+fine. No fix needed there.
+
+**Found:** After editing, recompiled the manuscript 3 passes with
+`pdflatex` (once in a scratch dir to verify before touching the tracked
+PDF, then again in place) — **zero warnings or errors on passes 2 and 3**
+both times, output remains 5 pages (153,713 bytes, byte-identical between
+the scratch and in-place builds, a good consistency check). This matches
+the project's own stated verification bar from `README.md`. Watched RAM
+throughout compilation (7.6GB available before and after, `pdflatex` is
+not memory-heavy) — no pressure observed.
+
+**Passed/failed:** Not a Go/No-Go test row — this is paper/documentation
+maintenance, keeping the manuscript's related-work section in sync with
+the literature survey. Compile: PASSED, zero warnings.
+
+**Next:** Still three human actions outstanding (HF license, LDC access
+question, interactive sudo for Test 6) — next session should re-check
+those first. If still blocked, other non-blocked candidates: verify
+`docs/06_Literature_Survey.md`'s other reference-list sections are fully
+reflected in the manuscript (only did a targeted check of H.3/H.4 this
+session, not a full audit), or continue the biweekly Test 7 cadence early
+if useful.
+
+**Safety events:** None. `pdflatex` is lightweight; RAM/disk untouched by
+the compile in any meaningful way.
+
+**Delegated to agy:** None — this was direct LaTeX editing and citation
+verification (checking real author names against the source), not content
+generation.
