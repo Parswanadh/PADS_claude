@@ -774,3 +774,45 @@ RAM/disk stayed well within thresholds throughout.
 
 **Delegated to agy:** None — direct environment setup and verification,
 not content generation.
+
+## 2026-08-07 — session 17 — MODEL UNBLOCKED
+
+**Did:** Re-checked HF access at loop start — got a *different* error than
+the usual "Access denied" (a 403 about fine-grained token permissions),
+which was the first sign something had changed. Retested with the token
+the user had shared earlier: **succeeded** — Meta approved the access
+request. Downloaded, converted, and quantized the real checkpoint
+end-to-end. First full-repo download attempt hung on a lock file (600s
+timeout, 0 bytes transferred on the large files) — investigated rather
+than retried blindly: found the repo has 3x redundant weight formats, we
+only need 2 files, and the default 8 parallel workers likely contributed
+to lock contention. Retried with just `model.safetensors` +
+`tokenizer.json` and `--max-workers 1`: succeeded cleanly. Converted to F16
+GGUF via `.venv-convert` (prepped in session 16), quantized to Q4_K_M with
+the already-built `llama-quantize` (from F16, never from an
+already-quantized file), and ran a sanity inference check with the `-st`
+flag learned in session 11.
+
+**Found:** Real, working, quantized LayerSkip checkpoint now exists:
+`models/gguf/layerskip-llama3.2-1b-Q4_K_M.gguf` (763MB, 5.18 BPW, down from
+2357MB F16). Inference genuinely works (252.6 t/s prompt, 52.1 t/s
+generation on this dev machine). Output was somewhat incoherent for the
+test prompt — expected and documented as such, not a bug: base model, not
+instruction-tuned, aggressive quantization, default chat wrapper. Full
+details in `experiments/results/model_acquisition_plan.md`.
+
+**Passed/failed:** Not a Go/No-Go row itself — this is the acquisition/
+conversion pipeline completing successfully, unblocking Tests 1 and 3
+which can now run for real.
+
+**Next:** Go/No-Go Test 1 (bandwidth-vs-compute, thread scaling) and
+Test 3 (self-speculative acceptance rate) — both ready to run against the
+real checkpoint now.
+
+**Safety events:** None. RAM stayed 6.8-7.4GB available throughout
+download/convert/quantize/inference; one timeout (initial download lock
+contention) handled by investigating and retrying smarter, not harder,
+exactly as CLAUDE.md prescribes.
+
+**Delegated to agy:** None — all execution (download, conversion,
+quantization, inference) stayed with Claude Code per CLAUDE.md's rule.
