@@ -112,3 +112,46 @@ index 1ef9a53..482c972 100644
  
      past_key_values = past_key_values.to_legacy_cache()
      hidden_states = model.model.norm(hidden_states)
+diff --git a/self_speculation/self_speculation_generator.py b/self_speculation/self_speculation_generator.py
+index bbf6d77..bb3b984 100644
+--- a/self_speculation/self_speculation_generator.py
++++ b/self_speculation/self_speculation_generator.py
+@@ -8,6 +8,7 @@
+ from typing import List, Optional, Tuple
+ 
+ import colorama
++import time
+ import torch
+ 
+ import transformers
+@@ -24,6 +25,14 @@ from self_speculation.llama_model_utils import (
+     forward_remainder,
+ )
+ 
++# PADS Go/No-Go Test 2 instrumentation: wall-clock time (seconds) for each
++# forward_remainder() call -- i.e. extending drafted tokens from the shallow
++# exit layer to full depth for verification. This is "one meaningful
++# speculative-depth step" per experiments/go_no_go/test2_pause_duration_check.py.
++# Not part of upstream LayerSkip; added locally, see the patch file in
++# experiments/results/ in the parent PADS repo.
++DEPTH_EXTENSION_STEP_TIMES_SEC: List[float] = []
++
+ def max_fn(x, eps=1e-6):
+     x_max = torch.where(x > 0, x, 0)
+     return x_max / (torch.sum(x_max) + eps)
+@@ -161,6 +170,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
+                 streamer.put(draft_output_ids, is_draft=True)
+ 
+         # logits: 1 x (T_d  + T_p) x V
++        _depth_extension_start = time.perf_counter()
+         verify_results = forward_remainder(
+             model,
+             prefill_token_ids.int(),
+@@ -168,6 +178,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
+             exit_layer,
+             exit_query_cache,
+         )
++        DEPTH_EXTENSION_STEP_TIMES_SEC.append(time.perf_counter() - _depth_extension_start)
+         logits = verify_results.logits
+         if logits_processors:
+             logits = logits_processors(prefill_token_ids, logits)

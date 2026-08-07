@@ -917,3 +917,62 @@ active work); each run wrapped in `timeout 300`.
 **Delegated to agy:** None — all debugging (reading transformers source,
 patching LayerSkip's code, dependency troubleshooting) and execution
 stayed with Claude Code, consistent with CLAUDE.md's execution rule.
+
+## 2026-08-07 — session 20 — Test 2 decode-step timing: real data captured
+
+**Did:** A long side-conversation happened this session about whether to
+pivot PADS toward a two-model interaction/background architecture
+(inspired by a Thinking Machines blog post the user shared, plus "Qwen
+3.8"/Qwen3.8-Max and "Ornith" — both verified as real via web search rather
+than guessed: Qwen3.8-Max is Alibaba's new 2.4T-parameter MoE model,
+Ornith-1.0 is DeepReinforce's self-scaffolding RL coding-model family).
+Pointed out this specific design matches "Thinking While Speaking," which
+the manuscript already cites as differentiation *against* PADS, and that
+building it (even with "our own" small versions of the architectures,
+not the actual pretrained weights) would still be from-scratch training
+and would still reproduce the crowded two-model pattern PADS was built to
+avoid. User decided to stick with core PADS and continue.
+
+Resumed with the next legitimate unblocked step: Test 2's decode-step-
+timing half, now measurable given the working self-speculative pipeline
+from session 19. Instrumented `self_speculation_generator.py` (timing each
+`forward_remainder()` call — the actual depth-extension operation) and
+wrote a new permanent Go/No-Go helper script,
+`experiments/go_no_go/test2_measure_decode_step_times.py`, since this
+measurement will be needed again on real target hardware later. Ran it
+against the real checkpoint with the same config as Test 3 (exit_layer=3,
+num_speculations=6, greedy).
+
+**Found:** Real data, n=147 steps: mean 285.1ms, median 263.2ms, tightly
+clustered 256.6–274.4ms (p25–p75), long tail to 1062.3ms. Important
+caveat, flagged clearly: this measured the raw PyTorch/`transformers`
+reference implementation LayerSkip's own scripts use, not the faster
+quantized `llama.cpp` pipeline Test 1 measured — a real deployment would
+likely be faster than this number. Did a preliminary (explicitly
+not-official) sanity check against the general pause-duration literature
+range already cited in the manuscript (stivers2009universals,
+heldner2010pauses — not real Switchboard data, that's still blocked):
+only 4.8% of steps are ≤200ms, but 91.2% are ≤300ms. Conclusion: the
+timing premise looks plausible but pause-length-dependent, not a clean
+pass — matches the test's own "legitimate finding either way" framing.
+
+**Passed/failed:** Test 2 upgraded from BLOCKED to **PARTIAL** — real
+decode-step data now exists; corpus half (LDC access) remains the
+outstanding blocker for a full official result.
+
+**Next:** LDC access question still outstanding for the corpus half.
+Test 4 (thermal, 30-min run) still needs explicit go-ahead — not yet
+given this session. Once corpus data exists, re-run the full comparison
+with `test2_pause_duration_check.py --pauses ... --steps
+test2_decode_step_times.json`.
+
+**Safety events:** None. Available RAM (the correct column per CLAUDE.md,
+not `free`) stayed at 5.1-5.4GB throughout — checked before and after the
+measurement run. Caught and corrected a mistake while writing this entry:
+first draft cited the `free` column (which did dip to ~2.8GB, buff/cache
+absorbing the rest) as if it were `available` — CLAUDE.md is explicit
+this is the wrong column to alarm on, and the actual available figure
+never approached the 3GB threshold.
+
+**Delegated to agy:** None — instrumentation, scripting, and execution
+stayed with Claude Code.
