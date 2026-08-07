@@ -540,3 +540,56 @@ up immediately once diagnosed. No memory pressure, no thermal issue.
 inference smoke test, debugging a hung process) under the heavy-execution
 safety protocol, explicitly Claude Code's responsibility per CLAUDE.md, not
 agy's.
+
+## 2026-08-07 — session 12
+
+**Did:** Re-verified state fresh (available RAM 7.3GB, load 1.75-2.54 —
+higher than earlier sessions but still well within the 3GB/22-core
+thresholds, disk 324GB free). Re-checked HF gated model access — still
+denied. Per the note ("three consecutive sessions of manuscript polish is
+enough"), looked more broadly at the build order instead of continuing
+that audit. Noticed Go/No-Go Test 4 (thermal stability) is different from
+Tests 1/3: it doesn't strictly need the real LayerSkip checkpoint, since
+thermal throttling is a hardware/BIOS property, not a model-specific one —
+session 11's TinyLlama stand-in could technically substitute. Read
+`test4_thermal_stability.sh` closely: it's a **fixed 30-minute (1800s)
+sustained full-CPU-load inference loop**, unattended. Also checked whether
+`sensors` (lm-sensors, which the script depends on for temperature
+readings) is installed — it isn't, and installing it needs sudo, same gate
+as Test 6.
+
+**Found:** Concluded this should **not** be launched autonomously this
+session. Reasoning: everything run so far under the existing safety
+protocol has been short (81s compile, <30s inference test) — a 30-minute
+unattended sustained max-load run on a shared, actively-used workstation
+(other real processes observed: browser, editor, another agent session,
+Docker Desktop) is a materially different disruption profile, and deciding
+whether now is an acceptable time for that is the user's call, not
+something to resolve unilaterally just because the technical blocker
+(model access) happens to have a workaround (the stand-in model). This is
+distinct from ordinary heavy-execution caution (RAM/timeout/thread limits,
+already handled) — it's specifically about duration and impact on a
+machine the user may be actively using. Documented this reasoning, plus
+the `lm-sensors` gap, directly in `experiments/go_no_go_results.md`'s
+Test 4 row so it's not lost, and flagged it to the user in this session's
+chat response as a fourth, distinct thing needing their input (a go-ahead
+for timing, not just an unblock) — worth batching `lm-sensors` install
+into the same sudo session as Test 6.
+
+**Passed/failed:** Test 4 = NOT STARTED, with the reason logged explicitly
+(consent/timing judgment call, not a technical or access blocker like the
+other three). Did not fabricate a run or skip the honest "why not" record.
+
+**Next:** Same three original blockers, plus this new distinct ask (OK to
+run a 30-min sustained load, and please `sudo apt install lm-sensors`
+alongside the Test 6 sudo commands). If the user gives the go-ahead, this
+becomes the next unit of work using the TinyLlama stand-in (labeled
+accordingly) or the real checkpoint if unblocked by then.
+
+**Safety events:** None. All checks this session were non-invasive
+(HF access check, reading a script, checking for a missing binary) — no
+heavy execution was attempted.
+
+**Delegated to agy:** None — this was risk assessment and judgment about
+what needs user consent versus what Claude Code can resolve unilaterally,
+not content generation.
