@@ -480,3 +480,63 @@ untouched meaningfully.
 **Delegated to agy:** None — this required judgment about whether a
 citation's description accurately represents the cited work, verified
 against real sources, not content generation.
+
+## 2026-08-07 — session 11
+
+**Did:** Re-verified state fresh (7.6GB available RAM, load 0.47, 325GB
+disk). Re-checked HF gated model access — still denied. Continued the
+literature-survey-vs-manuscript audit (sections A, C, D, E, F this time,
+after B was done last session) looking specifically for citations whose
+prose describes a different paper's technique — found no further
+mismatches; D and E aren't discussed in the manuscript's Related Work at
+all, which is consistent with the literature survey's own framing of them
+as "infrastructure, not novelty claims," not an oversight to fix. Rather
+than stop at "nothing found," identified a different, genuinely unblocked
+next step per the overarching build-order instruction: the llama.cpp build
+had only ever been verified to compile and print `--version` — actual
+model loading and generation had never been tested, and that gap doesn't
+depend on the LayerSkip checkpoint specifically. Verified a small,
+definitively ungated stand-in model (`TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF`,
+Q4_K_M, 0.67GB) via a metadata-only test download before committing to the
+full file, then downloaded it and ran `llama-cli` against it with a
+conservative thread count (`-t 21`), wrapped in `timeout`.
+
+**Found:** First inference attempt (`timeout 60`, `-no-cnv --simple-io`)
+did **not** exit cleanly — this build auto-enables conversation/interactive
+mode for chat-template models regardless of `-no-cnv` alone, and with
+stdin from `/dev/null` it looped on empty prompts until the timeout killed
+it, producing a runaway 4.2GB log (cleaned up). Per CLAUDE.md, treated the
+timeout as a signal to investigate, not retry harder: checked
+`llama-cli --help`, found `-st`/`--single-turn` is documented as
+non-interactive when `--prompt` is set, and a second attempt with `-st`
+(`timeout 30`) exited cleanly (code 0) after correctly generating "Yes,
+the capital of France is Paris." at ~233-268 t/s prompt / ~57-59 t/s
+generation on this hardware. **This confirms the compiled llama-cli binary
+genuinely loads models and generates text, not just that it compiles** —
+closing a real verification gap. Documented the `-st` requirement in
+`experiments/results/llamacpp_inference_smoke_test.md` as an action item
+for the future benchmark harness, since getting this wrong would silently
+hang any automated script. RAM stayed at 7.5-7.7GB available throughout,
+no memory pressure at any point (model load or generation). Added
+`models/` to `.gitignore` (large binary weights, confirmed via `git
+status` before staging anything that it wasn't about to be committed).
+
+**Passed/failed:** Not a Go/No-Go row — explicitly labeled as a pipeline
+smoke test using a different (ungated) model, not PADS performance data.
+Real, non-fabricated result: pipeline works end-to-end on this hardware.
+
+**Next:** Still the same three human actions outstanding. Once the
+LayerSkip checkpoint is available, the pipeline invocation mechanics
+(threading, the `-st` non-interactive flag) are now known-working, so any
+future issue will isolate to the model/config rather than the harness.
+
+**Safety events:** None that required stopping — the 60s timeout on the
+first inference attempt was exactly the kind of signal CLAUDE.md
+anticipates, handled by investigating (checked `--help`, found the correct
+flag) rather than blindly retrying, and the runaway log file was cleaned
+up immediately once diagnosed. No memory pressure, no thermal issue.
+
+**Delegated to agy:** None — this was direct execution (model download,
+inference smoke test, debugging a hung process) under the heavy-execution
+safety protocol, explicitly Claude Code's responsibility per CLAUDE.md, not
+agy's.
