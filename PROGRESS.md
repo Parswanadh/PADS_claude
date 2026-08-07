@@ -727,3 +727,50 @@ test, reading an existing README) — no execution.
 
 **Delegated to agy:** None — this was a status/blocker re-check, not
 content generation.
+
+## 2026-08-07 — session 16
+
+**Did:** User pasted the actual `facebook/layerskip-llama3.2-1B` model
+page content, confirming the access request has been **submitted** and is
+"awaiting a review from the repository authors" — this is Meta doing
+human review, not an instant-accept gate, so approval timing is now
+outside anyone's control here. Re-verified directly rather than trusting
+the pasted text alone (`hf download ... config.json`) — still denied as
+of this check. The user also supplied two different HF tokens directly in
+chat at separate points this session; verified each via `hf auth whoami`
+— both resolved to the same `Havoc1904` account already tried, and neither
+changed the access result, confirming this is genuinely "waiting on Meta,"
+not a token/credentials problem. Used the tokens only as one-shot
+`HF_TOKEN=... hf download` environment variables, never wrote them to any
+file, config, or committed content.
+
+Rather than poll idly while waiting, did real prep work: `convert_hf_to_gguf.py`
+needs `torch`/`transformers`/`sentencepiece`/`gguf`/`protobuf` plus a
+pinned `numpy~=1.26.4`, which conflicts with the newer numpy already in
+the main `.venv`. Created a separate `.venv-convert/` (gitignored) and
+installed the conversion requirements into it, checking RAM/disk before
+and during (stable throughout — install is mostly download/unpack, ~1GB
+disk for the full torch-CPU stack). Verified the script actually works in
+this environment (`convert_hf_to_gguf.py --help`, exit 0) rather than just
+assuming pip install succeeding meant it was ready.
+
+**Found:** Model access genuinely requires Meta's manual approval now —
+confirmed via direct re-check, not assumption. The GGUF conversion
+pipeline is now fully prepped and verified working, so once access clears
+there's no additional setup delay before conversion + quantization can
+start immediately.
+
+**Passed/failed:** Not a Go/No-Go row — environment prep. Conversion
+script verified working (exit 0, real `--help` output).
+
+**Next:** Waiting on Meta's approval (out of our control, no point polling
+aggressively). Once access clears: download → `.venv-convert`'s
+`convert_hf_to_gguf.py --outtype f16` → `llama-quantize` to Q4_K_M → Go/No-Go
+tests 1 and 3. Also still outstanding, unrelated to the model: LDC access
+confirmation and the Test 4 30-minute-run go-ahead.
+
+**Safety events:** None. Venv creation and pip install are lightweight;
+RAM/disk stayed well within thresholds throughout.
+
+**Delegated to agy:** None — direct environment setup and verification,
+not content generation.

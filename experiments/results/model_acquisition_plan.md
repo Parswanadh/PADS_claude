@@ -41,32 +41,47 @@ chosen deliberately:
   recipe applied, not a compromise on "start from released checkpoints,
   don't train from scratch."
 
-## Current status: BLOCKED on a human action, as of 2026-08-07
+## Current status: request submitted, awaiting Meta's manual review (as of 2026-08-07)
 
-Checked whether this machine's existing Hugging Face login (`hf auth
-whoami` → account `Havoc1904`, already authenticated from unrelated prior
-use — confirmed via `~/.cache/huggingface/token` and existing cached models
-for other projects) already has gated access to this specific repo, by
-attempting to download only the small `config.json`/`README.md` files
-(not the full ~2GB weights) as a lightweight access test:
+Initial state was blocked on the user needing to visit the model page and
+submit the access request — that step is now done. The user confirmed
+(pasting the actual model page content) that the request has been
+**submitted** and the page shows: "Your request to access this repository
+has been submitted and is awaiting a review from the repository authors."
+This is a gated repo with **human review on Meta's side**, not an
+instant-accept gate — approval timing is now out of both the user's and
+Claude Code's hands.
+
+Re-verified directly (not just trusting the pasted page text) — as of the
+last check this session, access is still denied:
 
 ```
-$ hf download facebook/layerskip-llama3.2-1B config.json README.md
+$ hf download facebook/layerskip-llama3.2-1B config.json
 Error: Access denied. This repository requires approval.
 ```
 
-**This is a genuine blocker, not a fabricated or worked-around result.**
-Gated HF repos require a human to visit the model page while logged in and
-click through the license acceptance form — this cannot be done
-programmatically or on the user's behalf.
+The user also supplied two different HF tokens directly in chat at
+different points; both resolved via `hf auth whoami` to the same
+`Havoc1904` account already tried, and neither changed the access result —
+**a token cannot bypass a pending gated-repo review**, so this confirms the
+blocker is genuinely "waiting on Meta," not a credentials issue. (Both
+tokens were used only as one-shot `HF_TOKEN=... hf download` environment
+variables, never written to any file or persisted config, and never
+committed anywhere.)
 
-### Action required (human, not Claude Code)
+### Prep work done while waiting (2026-08-07)
 
-Visit https://huggingface.co/facebook/layerskip-llama3.2-1B while logged in
-as the `Havoc1904` HF account (the account already authenticated on this
-machine) and accept the FAIR Noncommercial Research License. Access is
-typically granted within minutes to a few hours after acceptance (Meta's
-side, not something to poll aggressively for).
+Rather than poll idly, set up the GGUF conversion environment now so
+there's no additional setup delay once access clears. `convert_hf_to_gguf.py`
+needs `torch`, `transformers==4.57.6`, `sentencepiece`, `gguf`, `protobuf`,
+and a pinned `numpy~=1.26.4` — the last of which conflicts with the newer
+numpy already in the main `.venv` (installed for the sklearn-based
+scripts). Created a **separate** venv, `.venv-convert/` (gitignored), and
+installed `llama.cpp/requirements/requirements-convert_hf_to_gguf.txt`
+into it — confirmed working via `convert_hf_to_gguf.py --help` (exit 0).
+RAM stayed flat throughout install (mostly download/unpack, not
+compute-heavy); disk usage ~1GB for the full torch-CPU + transformers
+stack, well within budget.
 
 ### Next step once access is granted (a future session)
 
@@ -76,9 +91,16 @@ hf download facebook/layerskip-llama3.2-1B --local-dir models/checkpoints/layers
 ```
 
 Then verify the download (file sizes match the ~2GB expected, safetensors
-load cleanly), before proceeding to GGUF conversion
-(`convert_hf_to_gguf.py ... --outtype f16`) and quantization
-(`llama-quantize model-f16.gguf model-Q4_K_M.gguf Q4_K_M`) per
-`docs/03_SKILL.md` §1 — quantize last, never from an already-quantized
-file. `models/` should be added to `.gitignore` at that point (large binary
-weights don't belong in git).
+load cleanly), before proceeding to GGUF conversion using the now-ready
+`.venv-convert`:
+
+```
+.venv-convert/bin/python llama.cpp/convert_hf_to_gguf.py \
+  models/checkpoints/layerskip-llama3.2-1B --outtype f16 \
+  --outfile models/gguf/layerskip-llama3.2-1b-f16.gguf
+```
+
+Then quantize with the already-built `llama-quantize`
+(`llama.cpp/build/bin/llama-quantize model-f16.gguf model-Q4_K_M.gguf
+Q4_K_M`) per `docs/03_SKILL.md` §1 — quantize last, never from an
+already-quantized file.

@@ -6,5 +6,6 @@ __pycache__/
 *.out
 dialogue_act_model.joblib
 .venv/
+.venv-convert/
 llama.cpp/
 models/
