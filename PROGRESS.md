@@ -1026,3 +1026,44 @@ lightweight.
 
 **Delegated to agy:** None — direct manuscript editing and verification,
 not content generation.
+
+## 2026-08-08 — session 22 — Threats to Validity accuracy fixes
+
+**Did:** Re-checked state; Test 4 go-ahead and Test 2's LDC corpus access
+both still outstanding (not assumed granted just because time passed).
+Rather than wait idly, followed up on last session's own "Next" note and
+audited the Threats to Validity section against the real results now in
+`sec:status` — found it hadn't been updated when Table 1/Status were
+fixed, and it should have been checked regardless of whether Test 2/4
+clear, since the inaccuracies were independent of those blockers.
+
+**Found two real inaccuracies, not just polish opportunities:** (1)
+Construct validity still claimed "Go/No-Go 3 is designed to detect [early-
+exit adaptability]" — stale, since last session corrected Test 3 to be
+the acceptance-rate check, not an adaptability-score measurement; this
+paragraph never got the matching update. (2) External validity said
+"Results on one specific laptop model (Dell Latitude 5490) may not
+generalize..." — but nothing has ever been run on the Latitude 5490;
+every real number in this draft is from the Alienware dev machine. That
+sentence misrepresented which hardware produced the results. Fixed both:
+construct validity now correctly describes what Test 3 measures and
+flags the adaptability score as a not-yet-implemented refinement;
+external validity now explicitly discloses that all current results are
+dev-machine, not target-hardware, as an open gap rather than implying
+target-hardware data already exists. Also softened internal validity's
+Test 4 claim to note it hasn't been executed yet, so the mitigation is a
+design commitment, not a verified one.
+
+**Passed/failed:** Not a Go/No-Go row — manuscript accuracy. Recompiled
+3 passes: zero warnings, still 6 pages. RAM stayed 5.1-5.8GB available
+throughout.
+
+**Next:** Same two open items: Test 4 go-ahead, Test 2 corpus access
+(LDC or a verified alternative). No other manuscript sections currently
+known to be stale, but worth a broader read-through once those clear and
+more real data exists to check against.
+
+**Safety events:** None.
+
+**Delegated to agy:** None — direct manuscript editing, not content
+generation.
