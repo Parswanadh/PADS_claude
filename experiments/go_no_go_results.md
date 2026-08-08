@@ -62,3 +62,62 @@ near-tie is likely resolvable, not as Test 2's real answer. A genuine
 resolution needs either a real `llama.cpp`-based self-speculative
 implementation (a real engineering task) or a more careful proxy using
 prompt-processing throughput specifically.
+
+## Test 2 follow-up (b) — concrete "exploit only longer pauses" threshold analysis (2026-08-08)
+
+Test 2's row above identified fallback (b) — "since 49% of real pauses
+already clear the bar, exploit only the longer pauses" — as a viable but
+not-yet-concretized fallback design. This is a real analysis, computed
+directly from the two already-saved real datasets
+(`test2_ami_pause_durations_filtered.json`, n=64,173 real AMI gaps, and
+`test2_decode_step_times.json`, n=147 real PyTorch-reference
+depth-extension steps) — no new measurement or execution, just arithmetic
+over existing real numbers.
+
+Idea: instead of triggering PADS's depth-extension on every pause (where
+the median step barely loses to the median pause), only trigger when the
+*observed-so-far* pause duration already exceeds some threshold `T`. This
+trades coverage (fraction of real pauses long enough to use) against
+safety margin (fraction of real decode steps that fit inside `T` without
+overrunning the pause).
+
+| Threshold T | Pause coverage (% of real AMI pauses ≥ T) | Step fits-within (% of real steps ≤ T) |
+|---|---|---|
+| 200ms | 58.1% | 4.8% |
+| 250ms | 51.5% | 10.9% |
+| 260ms (current median-vs-median comparison) | 49.2% | 40.8% |
+| 263.2ms (measured step median) | 49.0% | 51.0% |
+| 280ms | 47.1% | 81.6% |
+| **300ms** | **45.0%** | **91.2%** |
+| 350ms | 40.2% | 94.6% |
+| 400ms | 36.2% | 94.6% |
+| 450ms | 32.7% | 94.6% |
+| 500ms | 30.1% | 94.6% |
+| 600ms | 25.4% | 94.6% |
+
+**Reading this table:** the raw median-vs-median comparison (T≈260ms) is
+a razor-thin, roughly coin-flip safety margin — only ~41-51% of real
+steps actually finish before the pause does at that threshold, which is
+consistent with Test 2's official near-tie FAILED result. Moving the
+trigger threshold up to **T=300ms** is a concrete, evidenced fallback
+design point: it still captures **45% of all real AMI pauses** (barely
+down from 49% at the naive threshold) while raising the safety margin to
+**91.2%** of real steps fitting comfortably inside the pause — a much
+more robust operating point than the coin-flip margin at the raw median.
+Beyond ~T=350-400ms the step-fit rate plateaus at 94.6% (the slowest
+~5.4% of measured steps are far outliers, max 1062.3ms — plausibly GC
+pauses, cache misses, or other measurement noise in the PyTorch reference
+implementation rather than representative depth-extension cost), so
+there's no real further safety benefit past that point, only lost
+coverage.
+
+**Caveats (same as the parent Test 2 entry, do not treat as resolved
+independent of them):** step-timing data is from the slower PyTorch
+reference implementation (n=147), not the quantized `llama.cpp` pipeline;
+pause data is from AMI (multi-party meetings), not Switchboard/CallHome
+(dyadic calls). This table is a real, direct computation over existing
+real data, not a new experiment — it does not change Test 2's official
+FAILED status, it gives the previously-abstract fallback (b) a concrete,
+evidence-based starting threshold (**T≈300ms**) for future work once a
+turn-taking predictor exists to supply pause-so-far duration as a live
+signal.
