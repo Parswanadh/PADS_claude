@@ -1297,3 +1297,47 @@ has passed. Test 4 still requires the user's explicit consent, unchanged
 by this recovery — that gate is a separate, deliberate decision, not a
 resource-availability question. No further Phase 2 or manuscript work
 identified beyond what's already been completed and logged this session.
+
+## 2026-08-08 — session 25 — Test 2 follow-up (b): concrete threshold analysis
+
+**Did:** Re-checked system state fresh before doing anything (thermal
+fully recovered, package 67.0°C vs. the earlier 98.0°C peak; RAM
+available 7.7GB; load average 1.08/1.84/4.17, trending down; git clean).
+Confirmed via `PROGRESS.md`'s own prior entry and a fresh grep that no
+unblocked work had been missed. Picked Test 2's follow-up (b) — designing
+the "exploit only longer pauses" fallback concretely — since it's real,
+useful, unblocked (no model loading, no heavy compute, no Test 4
+involvement), and was explicitly flagged as not-yet-done in the Test 2
+row. Computed a coverage-vs-safety-margin table directly from the two
+already-saved real datasets (`test2_ami_pause_durations_filtered.json`,
+n=64,173; `test2_decode_step_times.json`, n=147) — pure arithmetic over
+existing real numbers, zero new execution.
+
+**Found:** The raw median-vs-median threshold (~260ms, Test 2's official
+comparison) only gives a ~41-51% real step-fit rate — consistent with the
+official razor-thin FAILED result. Raising the trigger threshold to
+**T=300ms** is a concrete, evidenced operating point: 45.0% of real AMI
+pauses still clear it (barely down from 49.2% at the naive threshold),
+while 91.2% of real measured steps now fit comfortably inside it — a much
+more robust margin than the coin-flip-level margin at the raw median.
+Diminishing returns past ~T=350-400ms (plateaus at 94.6% step-fit; the
+remaining ~5.4% are far outliers, max 1062.3ms, likely measurement noise
+rather than representative cost).
+
+**Passed/failed:** N/A — an analysis/design task, not a Go/No-Go test
+re-run. Test 2's official FAILED status is unchanged; this only makes the
+already-identified fallback (b) concrete instead of abstract.
+
+**Next:** Test 4 still requires the user's own explicit, direct
+go-ahead — unchanged, not something this analysis or any further hook
+pressure supplies. No other unblocked Go/No-Go or manuscript work
+currently identified. Once Test 4 has a result (of any kind — the mission
+condition itself accepts pass/fail/partial-with-a-next-step) and Test 5's
+structural blocker is acknowledged as its own documented partial result,
+proceed to safe-core pipeline baselines per `docs/03_SKILL.md` §3.
+
+**Safety events:** None this unit — thermal and RAM both confirmed
+normal before starting, no execution/model-loading involved in this
+analysis task.
+
+**Delegated to agy:** None.
