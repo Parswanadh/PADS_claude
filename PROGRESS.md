@@ -1289,3 +1289,11 @@ created in this session; almost certainly a concurrent, unrelated process
 from another agent session on this shared, multi-session machine (other
 Claude Code and Codex sessions have been visible in `ps aux` throughout
 this conversation). Flagged to the user for awareness only.
+
+**Recovery confirmed:** package temperature down to 87.0°C (23°C margin
+to critical, vs. 12-15°C before), 1-min load average dropped to 1.76
+(from a 15.25 peak), available RAM back to 7.6GB. The thermal emergency
+has passed. Test 4 still requires the user's explicit consent, unchanged
+by this recovery — that gate is a separate, deliberate decision, not a
+resource-availability question. No further Phase 2 or manuscript work
+identified beyond what's already been completed and logged this session.
