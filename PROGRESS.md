@@ -1234,3 +1234,43 @@ classifier/turn-taking components still correctly noted as not existing
 yet to sum against. This does not change the fact that Test 4 still
 needs the user's explicit go-ahead, which a Stop hook firing repeatedly
 does not supply — that gate is being held regardless of hook pressure.
+
+## 2026-08-08 — session 24 continued — STOPPED: real thermal signal
+
+**Did:** Immediately after the Test 5 RSS measurement, a routine
+post-work resource check showed load average had spiked sharply to
+15.25 (1-min) — well above anything else seen this session (previous
+max ~6-7). Investigated immediately per CLAUDE.md rather than proceeding:
+`ps aux` showed no single dominant process (top was qemu at 14.4%, likely
+this spike was already decaying by the time of the snapshot), but
+`sensors` showed **package temperature 98.0°C** (core temps ~89°C),
+against a 110°C high/critical threshold — a real, current thermal signal,
+close enough to the limit to take seriously.
+
+**Found:** This is exactly the "thermal throttling or instability"
+condition CLAUDE.md requires stopping for immediately, not a Test-4/
+hook-pressure question. Likely cause: cumulative heat from this session's
+sustained mixed activity (the Test 5 inference run, the concurrent pytest
+burst from earlier, and the user's own ongoing VS Code/Chrome/Docker
+Desktop usage) catching up, rather than any single runaway process
+started by Claude Code.
+
+**Passed/failed:** N/A — a safety stop, not a completed unit of work.
+
+**Action taken:** Stopped all further work immediately. No new heavy
+operations attempted. Logging this now and ending the turn per CLAUDE.md's
+explicit instruction: "stop immediately, log it, commit the current
+state, and end the turn. Do not push through."
+
+**Next:** Let the machine cool before resuming any further model-loading
+or compute-heavy work, including Test 4 (which was already blocked on
+consent, and now additionally shouldn't run until thermal state is
+confirmed normal — a second, independent reason not to proceed with it
+right now regardless of the ongoing consent question).
+
+**Safety events:** **Thermal: package 98.0°C, near the 110°C critical
+threshold.** This is the first thermal event logged this session. Stopped
+immediately, did not push through, did not attempt any further heavy
+operation.
+
+**Delegated to agy:** None.
