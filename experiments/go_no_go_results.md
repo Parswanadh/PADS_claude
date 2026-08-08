@@ -25,3 +25,40 @@ Decision: continue as-is. No reposition needed. Re-run at next biweekly interval
 
 - A "FAIL" here is a valid research result, not a project failure — see Detailed Report §5–6 for the pre-committed pivot for each.
 - Do not skip a test because "it'll probably pass" — several of these (especially #1 and #2) exist specifically because the intuitive assumption may be wrong.
+
+## Test 2 supplementary analysis — quantized-pipeline speedup estimate (2026-08-08)
+
+Test 2's official result (FAILED, median pause 260.0ms vs. median step
+263.2ms) used decode-step timing measured on the PyTorch/`transformers`
+reference implementation. This note estimates — as a clearly-labeled
+**rough proxy, not a real measurement** — what the depth-extension step
+might take on the faster quantized `llama.cpp` pipeline, since no
+self-speculative early-exit implementation exists in `llama.cpp` to
+measure directly.
+
+**Real data used:** this session measured PyTorch FP16 plain
+autoregressive decoding on the same checkpoint/prompts at **13.89 tok/s**
+(72.0ms/token) — a genuine, direct measurement (`--generation_strategy
+autoregressive`). Test 1 (2026-08-07) measured `llama.cpp` Q4_K_M plain
+decoding at **~49.2 tok/s** (mean of the 7–8 thread plateau, 49.3/49.1).
+
+**Estimate:** speedup ratio ≈ 49.2 / 13.89 ≈ **3.54×**. Applied naively to
+the measured 263.2ms median step time: 263.2 / 3.54 ≈ **~74ms estimated
+quantized step time**. If this scaling held, the depth-extension step
+would comfortably clear even the AMI corpus's 25th-percentile real pause
+(110ms), decisively resolving the near-tie in favor of feasibility.
+
+**Why this is a rough estimate, not a revised result — do not treat the
+~74ms figure as a real number:** `forward_remainder()` verifies a *batch*
+of `num_speculations=6` drafted tokens in one forward pass — computationally
+closer to prompt/prefill processing than to sequential token-by-token
+decoding. `llama.cpp`'s own prompt-processing throughput (seen informally
+across this session's raw `llama-cli` runs, ~200–270 t/s) is meaningfully
+higher than its generation throughput (~49–59 t/s) used for this ratio,
+which this estimate does not account for — the true speedup for a batched
+verification pass could differ from the plain-sequential-decoding ratio
+in either direction. Treat ~74ms as a plausibility argument that the
+near-tie is likely resolvable, not as Test 2's real answer. A genuine
+resolution needs either a real `llama.cpp`-based self-speculative
+implementation (a real engineering task) or a more careful proxy using
+prompt-processing throughput specifically.

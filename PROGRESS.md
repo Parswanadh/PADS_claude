@@ -1130,3 +1130,22 @@ pause-only fallback design) are legitimate future work, not blocking.
 
 **Delegated to agy:** None — corpus verification, extraction script, and
 analysis all stayed with Claude Code.
+
+**Follow-up in same session:** measured a real PyTorch FP16 plain-
+autoregressive baseline (`--generation_strategy autoregressive`, same
+checkpoint/prompts) to pursue Test 2's own flagged next step — 13.89
+tok/s (72.0ms/token), a genuine direct measurement. Compared against
+Test 1's real llama.cpp Q4_K_M plateau (~49.2 tok/s): ~3.54x speedup
+ratio. Applied naively to the 263.2ms median step time: ~74ms estimated
+quantized-pipeline step time — would comfortably clear the near-tie if
+it held. Documented this carefully as a rough, explicitly-hedged proxy
+estimate, not a revised result: `forward_remainder()`'s batched
+multi-token verification is computationally closer to prompt/prefill
+processing than sequential decoding, and llama.cpp's own prompt
+throughput (~200-270 t/s, seen informally this session) is notably
+higher than the generation throughput used for this ratio — the estimate
+could be wrong in either direction. Added as a new "Test 2 supplementary
+analysis" section in `experiments/go_no_go_results.md` and a hedged
+sentence in the manuscript, explicitly not treated as resolving the
+official FAILED verdict. Recompiled clean, 6 pages. RAM 4.1-4.5GB
+available throughout this follow-up.
