@@ -1067,3 +1067,66 @@ more real data exists to check against.
 
 **Delegated to agy:** None — direct manuscript editing, not content
 generation.
+
+## 2026-08-08 — session 23 — Test 2 COMPLETE: real data both sides, FAILED by a hair
+
+**Did:** User set a `/goal` (this time under the 4000-char limit that broke
+the first attempt) — a session-scoped Stop hook is now active driving
+autonomous continuation. Both Test 4 and Test 2's corpus half remained
+genuinely blocked on user action, so pursued a concrete unblocked thread
+flagged back in session 7-8 but never finished: whether a freely-available
+alternative to LDC-gated Switchboard/CallHome exists. Verified NXT
+Switchboard Annotations is still LDC-gated for actual download despite a
+friendlier license once obtained (doesn't help). Found and verified the
+**AMI Meeting Corpus** instead: fetched its actual access/license pages
+directly (not just search summaries), confirmed CC BY 4.0, no registration
+wall, no LDC gating — then tested the real download URL (HTTP 200,
+unauthenticated) and downloaded the 22MB manual-annotations package to
+inspect firsthand rather than trust a description. Confirmed real
+word-level `starttime`/`endtime` timestamps per speaker per meeting.
+
+Wrote `experiments/go_no_go/test2_extract_ami_pause_durations.py`: merges
+all speakers' word timings chronologically per meeting, records the gap
+at every real speaker transition (matching Heldner & Edlund's "gap"
+definition, already cited in the manuscript). Ran it: 171 meetings,
+64,415 real between-speaker gaps. Noticed mean (610.6ms) was far above
+median (260.0ms) — investigated rather than accepting the mean at face
+value, found a long tail to 137.6 seconds (almost certainly meeting-
+structural breaks, not turn-taking gaps — matches Sacks et al.'s
+pause/gap/lapse distinction). Filtered lapses (>10s, only 0.38% of data):
+median unchanged at 260.0ms, closely matching the general literature
+range already cited (stivers2009universals, heldner2010pauses) — a good
+sanity check the extraction is sound.
+
+Ran the actual `test2_pause_duration_check.py --pauses <AMI> --steps
+<real decode-step data>` for the first time ever in this project, with
+real data on both sides.
+
+**Found:** Median real pause (260.0ms) vs median depth-extension step
+(263.2ms) — **a 3.2ms, ~1% difference.** The kill signal fires (pause <
+step), but by a margin so small it's likely within measurement/
+implementation noise. 49.0% of real pauses already clear the bar. Logged
+this honestly as **FAILED per the test's own strict criterion**, not
+softened or rounded to a pass — while prominently flagging two real
+caveats that could flip it: the step-timing side used the slower PyTorch
+reference implementation, not the quantized llama.cpp path Test 1 showed
+is meaningfully faster; and AMI is multi-party meetings, not the dyadic
+telephone register the timing premise targets. Updated the manuscript's
+Status/Results section with this complete result and a proper citation
+for AMI (Carletta et al. 2005, verified via search, not guessed).
+
+**Passed/failed:** **Test 2 = FAILED, razor-thin margin, with two
+concrete unresolved next steps** (re-measure on quantized pipeline;
+consider the already-evidenced "exploit only longer pauses" fallback).
+This is now a complete result, not a partial one — six of seven Go/No-Go
+tests have real data; only Test 4 remains fully unstarted.
+
+**Next:** Test 4 still needs explicit user go-ahead — has not been given.
+The two Test 2 follow-ups (quantized-pipeline re-measurement; longer-
+pause-only fallback design) are legitimate future work, not blocking.
+
+**Safety events:** None. RAM stayed 4.5-4.8GB available throughout
+(XML parsing and JSON work, no heavy compute); recompiled clean, 6 pages.
+
+**Delegated to agy:** None — corpus verification, extraction script, and
+analysis all stayed with Claude Code.
