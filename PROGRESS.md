@@ -1162,3 +1162,20 @@ that five of seven Go/No-Go experiments are now complete with real
 results, rather than the original vaguer "subset... completed to date"
 phrasing written before any real data existed. Recompiled clean, 6
 pages, RAM stable (4.4-4.5GB available).
+
+**Third follow-up:** checked the Conclusion section, the last unaudited
+section in the manuscript. Found the same "two closest prior systems"
+undercount, and a more significant staleness issue: "Future work
+comprises executing the outstanding Go/No-Go experiments" implied none
+had been run yet, when 5 of 7 now have real results. Fixed both: "three"
+prior systems, and rewrote the Future Work sentence to accurately state
+what's actually still open (Test 4 pending a scheduling decision, Test 5's
+full pipeline measurement pending safe-core components, re-collection on
+target hardware, safe-core implementation, and the stretch mechanism
+contingent on the go/continue checkpoint) rather than implying a blank
+slate. Recompiled clean, 6 pages, RAM stable (4.3-4.4GB available).
+
+This closes out the full manuscript accuracy audit started in session
+21 — all major sections (Abstract, Introduction, Related Work count,
+Status/Results, Threats to Validity, Conclusion) now consistently
+reflect the real results in hand as of 2026-08-08.
