@@ -976,3 +976,53 @@ never approached the 3GB threshold.
 
 **Delegated to agy:** None — instrumentation, scripting, and execution
 stayed with Claude Code.
+
+## 2026-08-08 — session 21 — manuscript now reports real results
+
+**Did:** With no new blockers cleared, looked for the next legitimate
+unblocked step and found the manuscript's "Status and Verified Results"
+section (§`sec:status`) was entirely stale — written before any real
+Go/No-Go data existed, still saying "not yet executed" for all seven
+tests despite five of them now having real or partial results. While
+reading it closely, found a real discrepancy worth fixing, not just
+appending to: Table 1's row for Test 3 described measuring a
+"logit-similarity-based early-exit adaptability score" (an idea from
+`docs/06_Literature_Survey.md` §H.2), but what was actually built and run
+(`test3_acceptance_rate.sh`, and the real 86.4% result from session 19) is
+the original, simpler off-the-shelf acceptance-rate test from
+`docs/03_SKILL.md`. Fixed Table 1's row 3 to match what's actually
+implemented and tested, and noted the adaptability-score idea as an
+explicitly-flagged planned refinement, not something silently implied to
+have already happened.
+
+Rewrote the Status and Verified Results section with real per-test
+results: Test 1 (FAILED, bandwidth-bound, with real 16.7-49.3 tok/s
+data), Test 2 (PARTIAL, real 285ms mean decode-step data with the
+PyTorch-vs-llama.cpp caveat), Test 3 (PASSED, 86.4% acceptance),
+Test 4 (not yet executed, honestly stated), Test 5 (PARTIAL), Test 6
+(PASSED, real turbostat/powertop/RAPL numbers), Test 7 (PASSED). Added an
+explicit statement up front that all numbers are from the dev machine
+(Alienware m16 R2), not the target Latitude 5490, and named the exact
+checkpoint used throughout (`facebook/layerskip-llama3.2-1B`) for the
+first time in this section.
+
+**Found:** Recompiled 3 passes with `pdflatex`: zero warnings/errors,
+grew from 5 to 6 pages (expected, given the substantial real content
+added). RAM stayed at 5.3-5.7GB available throughout.
+
+**Passed/failed:** Not a Go/No-Go row — manuscript accuracy work. This is
+a meaningful step toward an actually submittable draft: the paper now
+honestly reflects what this project has actually measured, not what it
+expected to measure when the scaffold was first written.
+
+**Next:** Test 4 (thermal, needs go-ahead) and Test 2's corpus half (LDC
+access) remain the two open Go/No-Go items. Once those clear (or are
+otherwise resolved), the Threats to Validity section should also get a
+pass to make sure its claims are still accurate given the real results
+now in hand.
+
+**Safety events:** None. RAM/disk stable throughout; `pdflatex` is
+lightweight.
+
+**Delegated to agy:** None — direct manuscript editing and verification,
+not content generation.
