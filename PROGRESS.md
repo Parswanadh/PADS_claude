@@ -1149,3 +1149,16 @@ analysis" section in `experiments/go_no_go_results.md` and a hedged
 sentence in the manuscript, explicitly not treated as resolving the
 official FAILED verdict. Recompiled clean, 6 pages. RAM 4.1-4.5GB
 available throughout this follow-up.
+
+**Second follow-up:** checked the Abstract/Introduction for staleness
+(not yet audited in the two prior manuscript-accuracy passes this
+session). Found a real inconsistency: the Abstract described "the
+closest prior systems" as only two (edge-cloud framework, turn-detection
+cascade), but the Related Work section was updated to "three closest
+prior systems" back in session 10 when "Thinking While Speaking" was
+added — the Abstract never got the matching update. Fixed to mention all
+three, and updated the Abstract's closing sentence to honestly reflect
+that five of seven Go/No-Go experiments are now complete with real
+results, rather than the original vaguer "subset... completed to date"
+phrasing written before any real data existed. Recompiled clean, 6
+pages, RAM stable (4.4-4.5GB available).
