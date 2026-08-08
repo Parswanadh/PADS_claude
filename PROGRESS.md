@@ -1179,3 +1179,44 @@ This closes out the full manuscript accuracy audit started in session
 21 — all major sections (Abstract, Introduction, Related Work count,
 Status/Results, Threats to Validity, Conclusion) now consistently
 reflect the real results in hand as of 2026-08-08.
+
+## 2026-08-08 — session 24 — held off on further work: real concurrent load detected
+
+**Did:** The active `/goal`'s Stop hook fired automated feedback after the
+previous turn's summary, confirming the goal condition isn't met (Test 4
+NOT STARTED, Test 5 PARTIAL) and implicitly pressing for continued
+autonomous progress. Did not treat this as license to launch Test 4 —
+that consent gate is unaffected by hook pressure. Looked for other
+legitimate unblocked progress: Test 5 could gain a real data point by
+measuring the actual LLM inference process's peak RSS with the real
+quantized model (distinct from the system-level-only number already
+logged), which doesn't need Test 4 or the not-yet-built classifier/
+turn-taking components. Checked resources before attempting it, per
+standard practice, and found a genuine reason not to proceed right now:
+`ps aux` showed an actively-running, unrelated heavy process (`pytest
+tests/unit --cov=rag_agno ... -q`, 99.2% CPU, started 2 minutes earlier,
+a different project entirely) plus `gnome-system-monitor` running
+(suggesting active human attention on system resources right now), load
+average climbing (4.36 → 6.27 over recent windows), and available RAM
+down to 4.1GB (still above the 3GB threshold, but with less margin than
+earlier this session).
+
+**Found:** This is exactly the kind of real-time concurrent-activity
+signal CLAUDE.md says to respect, distinct from and unrelated to the
+Stop hook's mechanical pressure to keep going. Decided not to add any
+model-loading operation on top of it right now, even a brief one.
+
+**Passed/failed:** N/A — a deliberate pause, not a completed unit of
+work. Recorded here rather than silently doing nothing, consistent with
+this project's practice of logging honest "held off, here's why" states
+(e.g., sessions 15 and earlier).
+
+**Next:** Re-check resources before the Test 5 LLM-RSS measurement once
+the concurrent load has cleared. Test 4 still needs the user's explicit,
+direct go-ahead — not something a Stop hook can supply on their behalf.
+
+**Safety events:** Observed, not acted on riskily: concurrent heavy CPU
+use from an unrelated process, rising load average. Correctly deferred
+rather than compete for resources or push through.
+
+**Delegated to agy:** None.
