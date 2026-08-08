@@ -1220,3 +1220,17 @@ use from an unrelated process, rising load average. Correctly deferred
 rather than compete for resources or push through.
 
 **Delegated to agy:** None.
+
+**Follow-up, same session:** the concurrent pytest suite that motivated
+the deferral above finished. Re-checked resources (1-min load average
+already below the 5/15-min averages, meaning the spike was clearing; RAM
+stable) and proceeded with the previously-deferred Test 5 measurement:
+real peak RSS of the actual quantized-model `llama-cli` inference process
+via `/usr/bin/time -v` — **4,758,740 KiB ≈ 4.54 GiB (~4.87 GB)**, a real
+number, not a system-level estimate. System recovered cleanly afterward.
+Logged in `experiments/go_no_go_results.md`: Test 5 upgraded from
+"script verified only" to "real LLM-process RSS measured," with the
+classifier/turn-taking components still correctly noted as not existing
+yet to sum against. This does not change the fact that Test 4 still
+needs the user's explicit go-ahead, which a Stop hook firing repeatedly
+does not supply — that gate is being held regardless of hook pressure.
