@@ -1274,3 +1274,18 @@ immediately, did not push through, did not attempt any further heavy
 operation.
 
 **Delegated to agy:** None.
+
+**Re-check (same thermal event, continued):** the goal's Stop hook fired
+again pressing for progress. Checked thermal state fresh before any other
+action, as required — package temperature is 95.0°C, only 3°C down from
+the 98.0°C reading that triggered the stop, still close to the 110°C
+critical threshold and not meaningfully recovered. Load average also
+still elevated (5.75-9.53). **Conclusion unchanged: no further
+compute-touching work, heavy or small, until this actually recovers.**
+Noted (not investigated or acted on, out of scope) an unrelated `git
+commit` process observed in `ps aux` with an unfamiliar message ("Add
+inactive generation authorization probe") — not something Claude Code
+created in this session; almost certainly a concurrent, unrelated process
+from another agent session on this shared, multi-session machine (other
+Claude Code and Codex sessions have been visible in `ps aux` throughout
+this conversation). Flagged to the user for awareness only.
